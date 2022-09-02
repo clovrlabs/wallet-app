@@ -108,8 +108,8 @@ class NetworkPageState extends State<NetworkPage> {
                           children: [
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.white,
                                 side: BorderSide(color: Colors.white),
-                                primary: Colors.white,
                               ),
                               child: Text(texts.network_restart_action_reset),
                               onPressed: _resetNodes,
@@ -117,8 +117,8 @@ class NetworkPageState extends State<NetworkPage> {
                             SizedBox(width: 12.0),
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.white,
                                 side: BorderSide(color: Colors.white),
-                                primary: Colors.white,
                               ),
                               child: Text(texts.network_restart_action_save),
                               onPressed: saveNodes,
