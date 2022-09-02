@@ -108,7 +108,7 @@ class SuccessfulPaymentRouteState extends State<SuccessfulPaymentRoute>
           padding: const EdgeInsets.only(top: 20, bottom: 40),
           child: Container(
             decoration: new BoxDecoration(
-              color: themeData.buttonColor,
+              color: theme.buttonColor,
               shape: BoxShape.circle,
             ),
             child: Image(
