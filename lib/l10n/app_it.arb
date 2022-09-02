@@ -210,10 +210,6 @@
             }
         }
     },
-    "invoice_bottom_sheet_action_invoice": "INVOICE",
-    "invoice_bottom_sheet_action_pay": "PAGA",
-    "invoice_bottom_sheet_action_receive": "RICEVI",
-    "invoice_bottom_sheet_error_qrcode": "Nessun QR code rilevato.",
     "backup_dialog_title": "Backup",
     "backup_dialog_message_remote_server": "Impossibile salvare i file di backup sul server remoto. Rivedi le tue impostazioni e riprova.",
     "backup_dialog_message_default": "Se vuoi poter ripristinare i tuoi fondi nel caso in cui questo dispositivo o questa app non siano più disponibili (ad es. dispositivo smarrito o rubato o disinstallazione dell'app), devi eseguire il backup delle tue informazioni.",

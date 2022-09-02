@@ -210,10 +210,6 @@
       }
     }
   },
-  "invoice_bottom_sheet_action_invoice": "LASKU",
-  "invoice_bottom_sheet_action_pay": "MAKSA",
-  "invoice_bottom_sheet_action_receive": "VASTAANOTA",
-  "invoice_bottom_sheet_error_qrcode": "QR-koodia ei tunnistettu.",
   "backup_dialog_title": "Varmuuskopio",
   "backup_dialog_message_remote_server": "Varmuuskopiointi palvelimelle epäonnistui. Tarkista asetukset ja yritä uudelleen.",
   "backup_dialog_message_default": "Sinun tulee varmuuskopioida Breez-tiedot, jotta varojesi palautus onnistuisi tämän laitteen katoamisen, varkauden tai rikkoontumisen sekä mahdollisen sovelluksen poiston ja uudelleen asennuksen yhteydessä.",

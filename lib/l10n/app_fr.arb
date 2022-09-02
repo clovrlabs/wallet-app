@@ -210,10 +210,6 @@
       }
     }
   },
-  "invoice_bottom_sheet_action_invoice": "FACTURE",
-  "invoice_bottom_sheet_action_pay": "PAYER",
-  "invoice_bottom_sheet_action_receive": "RECEVOIR",
-  "invoice_bottom_sheet_error_qrcode": "Le code QR n'a pas été détecté.",
   "backup_dialog_title": "Sauvegarde",
   "backup_dialog_message_remote_server": "Échec de l'enregistrement des fichiers de sauvegarde sur le serveur distant. Veuillez revoir vos paramètres et réessayer.",
   "backup_dialog_message_default": "Si vous souhaitez pouvoir restaurer vos fonds au cas où cet appareil mobile ou cette application ne seraient plus disponibles (par exemple en cas de perte ou de vol de l'appareil ou de désinstallation de l'application), vous êtes tenu de sauvegarder vos informations.",
