@@ -20,7 +20,6 @@ class _ChangePinCodeState extends State<ChangePinCode> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
 
     if (_label == null) {

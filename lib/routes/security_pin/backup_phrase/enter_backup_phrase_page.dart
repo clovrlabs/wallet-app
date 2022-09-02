@@ -55,7 +55,6 @@ class EnterBackupPhrasePageState extends State<EnterBackupPhrasePage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
     final query = MediaQuery.of(context);
     final userProfileBloc = AppBlocsProvider.of<UserProfileBloc>(context);

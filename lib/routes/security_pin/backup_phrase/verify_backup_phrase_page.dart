@@ -32,10 +32,10 @@ class VerifyBackupPhrasePageState extends State<VerifyBackupPhrasePage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final query = MediaQuery.of(context);
     final texts = AppLocalizations.of(context);
     final backupBloc = AppBlocsProvider.of<BackupBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

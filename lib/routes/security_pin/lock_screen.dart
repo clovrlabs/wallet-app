@@ -26,7 +26,7 @@ class AppLockScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
+
     return WillPopScope(
       onWillPop: willPopCallback(
         context,

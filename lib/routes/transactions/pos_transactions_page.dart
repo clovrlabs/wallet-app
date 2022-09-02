@@ -219,7 +219,6 @@ class PosTransactionsPageState extends State<PosTransactionsPage> {
     AccountModel accountModel,
   ) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
     final filter = paymentsModel.filter;
     final payments = paymentsModel.paymentsList;
     final hasDateRange = filter.startDate != null && filter.endDate != null;

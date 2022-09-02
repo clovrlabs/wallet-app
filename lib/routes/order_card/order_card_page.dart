@@ -384,7 +384,6 @@ class OrderCardPageState extends State<OrderCardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
 
     bool _showSkip = widget.showSkip ?? false;

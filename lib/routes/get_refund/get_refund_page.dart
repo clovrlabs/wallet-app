@@ -15,7 +15,6 @@ import 'wait_broadcast_dialog.dart';
 class GetRefundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
 
     final accountBloc = AppBlocsProvider.of<AccountBloc>(context);

@@ -75,7 +75,6 @@ class SecurityPageState extends State<SecurityPage>
   @override
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
 
     return StreamBuilder<BackupState>(
       stream: widget.backupBloc.backupStateStream,

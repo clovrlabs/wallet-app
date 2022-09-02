@@ -40,7 +40,6 @@ class _SetAdminPasswordState extends State<SetAdminPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
     final userProfileBloc = AppBlocsProvider.of<UserProfileBloc>(context);
 
     return Scaffold(

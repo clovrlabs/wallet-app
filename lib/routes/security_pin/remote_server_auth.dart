@@ -82,7 +82,6 @@ class RemoteServerAuthPageState extends State<RemoteServerAuthPage> {
   @override
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
     final nav = Navigator.of(context);
 
     return StreamBuilder<BackupSettings>(

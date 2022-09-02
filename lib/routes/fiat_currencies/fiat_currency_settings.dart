@@ -36,7 +36,6 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
 
     return StreamBuilder<AccountModel>(
