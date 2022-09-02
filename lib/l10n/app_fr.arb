@@ -1275,50 +1275,6 @@
   },
   "close_popup_title": "Quitter Breez",
   "close_popup_message": "Voulez-vous vraiment vraiment quitter Breez ?",
-  "breez_date_picker_day_and_date": "{day} {date}",
-  "@breez_date_picker_day_and_date": {
-    "placeholders": {
-      "day": {
-        "type": "String",
-        "example": "12"
-      },
-      "date": {
-        "type": "String",
-        "example": "12/12/2121"
-      }
-    }
-  },
-  "breez_date_picker_previous_month_tooltip": "{message} {date}",
-  "@breez_date_picker_previous_month_tooltip": {
-    "placeholders": {
-      "message": {
-        "type": "String",
-        "example": "Mois précédent"
-      },
-      "date": {
-        "type": "String",
-        "example": "12 2121"
-      }
-    }
-  },
-  "breez_date_picker_next_month_tooltip": "{message} {date}",
-  "@breez_date_picker_next_month_tooltip": {
-    "placeholders": {
-      "message": {
-        "type": "String",
-        "example": "Mois suivant"
-      },
-      "date": {
-        "type": "String",
-        "example": "12 2121"
-      }
-    }
-  },
-  "breez_date_picker_error_initial_date_after": "La date initiale doit être égale ou postérieure à la première date",
-  "breez_date_picker_error_initial_date_before": "La date initiale doit être antérieure ou égale à la date finale",
-  "breez_date_picker_error_initial_date_predicate": "La date initiale fournie doit satisfaire le prédicat du jour sélectionnable fourni.",
-  "breez_date_picker_error_initial_date_null": "Le mode initial du sélecteur de date ne doit pas être nul",
-  "breez_date_picker_error_last_date_after": "La dernière date doit être égale ou postérieure à la première date",
   "breez_avatar_dialog_random": "ALEATOIRE",
   "breez_avatar_dialog_gallery": "GALERIE",
   "breez_avatar_dialog_your_name": "Entrez votre nom",

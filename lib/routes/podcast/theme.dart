@@ -29,7 +29,6 @@ Widget withPodcastTheme(BreezUserModel user, Widget child) {
         ? Themes.lightTheme().themeData.copyWith(
               brightness: Brightness.light,
               primaryColor: Color.fromRGBO(0, 133, 251, 1.0),
-              primaryColorBrightness: Brightness.light,
               primaryColorLight: Color.fromRGBO(0, 117, 255, 1.0),
               primaryColorDark: Color.fromRGBO(19, 85, 191, 1.0),
               colorScheme: ColorScheme.light(
@@ -118,7 +117,6 @@ Widget withPodcastTheme(BreezUserModel user, Widget child) {
         : Themes.darkTheme().themeData.copyWith(
               brightness: Brightness.dark,
               primaryColor: Color(0xFF4B89EB),
-              primaryColorBrightness: Brightness.dark,
               primaryColorLight: Color(0xFF81acf1),
               primaryColorDark: Color(0xFF00081C),
               colorScheme: ColorScheme.dark(
