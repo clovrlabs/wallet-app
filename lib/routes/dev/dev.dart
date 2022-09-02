@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
+
 import '../../bloc/podcast_history/sqflite/podcast_history_database.dart';
 import 'default_commands.dart';
 
@@ -149,12 +150,8 @@ class DevViewState extends State<DevView> {
                               return Scaffold(
                                 key: _scaffoldKey,
                                 appBar: AppBar(
-                                  iconTheme:
-                                      Theme.of(context).appBarTheme.iconTheme,
-                                  backgroundColor:
-                                      Theme.of(context).canvasColor,
                                   leading: backBtn.BackButton(),
-                                  elevation: 0.0,
+                                  title: Text("Developers"),
                                   actions: <Widget>[
                                     PopupMenuButton<Choice>(
                                       onSelected: widget._select,
@@ -185,13 +182,6 @@ class DevViewState extends State<DevView> {
                                       },
                                     ),
                                   ],
-                                  title: Text(
-                                    "Developers",
-                                    style: Theme.of(context)
-                                        .appBarTheme
-                                        .textTheme
-                                        .headline6,
-                                  ),
                                 ),
                                 body: Column(
                                     crossAxisAlignment:

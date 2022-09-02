@@ -22,15 +22,8 @@ class GetRefundPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: themeData.appBarTheme.iconTheme,
-        textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
         leading: backBtn.BackButton(),
-        title: Text(
-          texts.get_refund_title,
-          style: themeData.appBarTheme.textTheme.headline6,
-        ),
-        elevation: 0.0,
+        title: Text(texts.get_refund_title),
       ),
       body: StreamBuilder<AccountModel>(
         stream: accountBloc.accountStream,

@@ -101,17 +101,10 @@ class ReverseSwapPageState extends State<ReverseSwapPage> {
                   _loadingError != null ||
                   hasUnconfirmed
               ? AppBar(
-                  iconTheme: themeData.appBarTheme.iconTheme,
-                  textTheme: themeData.appBarTheme.textTheme,
-                  backgroundColor: themeData.canvasColor,
                   leading: backBtn.BackButton(
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                  title: Text(
-                    texts.reverse_swap_title,
-                    style: themeData.appBarTheme.textTheme.headline6,
-                  ),
-                  elevation: 0.0,
+                  title: Text(texts.reverse_swap_title),
                 )
               : null,
           body: FutureBuilder<Object>(

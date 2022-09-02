@@ -50,22 +50,14 @@ class NetworkPageState extends State<NetworkPage> {
   @override
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
 
     return ButtonTheme(
       height: 28.0,
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: themeData.appBarTheme.iconTheme,
-          textTheme: themeData.appBarTheme.textTheme,
-          backgroundColor: themeData.canvasColor,
           automaticallyImplyLeading: false,
           leading: backBtn.BackButton(),
-          title: Text(
-            texts.network_title,
-            style: themeData.appBarTheme.textTheme.headline6,
-          ),
-          elevation: 0.0,
+          title: Text(texts.network_title),
         ),
         body: Padding(
           padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),

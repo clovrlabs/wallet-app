@@ -90,19 +90,13 @@ class RemoteServerAuthPageState extends State<RemoteServerAuthPage> {
       builder: (context, snapshot) {
         return Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             leading: backBtn.BackButton(
               onPressed: () {
                 nav.pop(null);
               },
             ),
-            automaticallyImplyLeading: false,
-            iconTheme: themeData.appBarTheme.iconTheme,
-            backgroundColor: themeData.canvasColor,
-            title: Text(
-              texts.remote_server_title,
-              style: themeData.appBarTheme.textTheme.headline6,
-            ),
-            elevation: 0.0, toolbarTextStyle: themeData.appBarTheme.textTheme.bodyText2, titleTextStyle: themeData.appBarTheme.textTheme.headline6,
+            title: Text(texts.remote_server_title),
           ),
           body: SingleChildScrollView(
             reverse: true,

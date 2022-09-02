@@ -29,13 +29,9 @@ class _ChangePinCodeState extends State<ChangePinCode> {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: themeData.appBarTheme.iconTheme,
-        textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
         leading: backBtn.BackButton(
           onPressed: () => Navigator.pop(context, null),
         ),
-        elevation: 0.0,
       ),
       body: PinCodeWidget(
         _label,

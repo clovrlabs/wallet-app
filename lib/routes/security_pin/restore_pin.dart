@@ -20,15 +20,11 @@ class RestorePinCode extends StatelessWidget {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: themeData.appBarTheme.iconTheme,
-          textTheme: themeData.appBarTheme.textTheme,
-          backgroundColor: themeData.canvasColor,
           leading: backBtn.BackButton(
             onPressed: () {
               Navigator.pop(context, null);
             },
           ),
-          elevation: 0.0,
         ),
         body: PinCodeWidget(
           texts.restore_pin_title,

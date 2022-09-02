@@ -8,8 +8,8 @@ import 'package:breez/widgets/back_button.dart' as backBtn;
 import 'package:breez/widgets/single_button_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 
 class _CustomerData {
   String fullName = '';
@@ -390,18 +390,13 @@ class OrderCardPageState extends State<OrderCardPage> {
     bool _showSkip = widget.showSkip ?? false;
     return Scaffold(
       appBar: AppBar(
-        iconTheme: themeData.appBarTheme.iconTheme,
-        textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
         automaticallyImplyLeading: false,
         leading: _showLeadingButton(_showSkip),
         title: Text(
           _showSkip
               ? texts.order_card_action_order_breez_card
               : texts.order_card_action_order_card,
-          style: themeData.appBarTheme.textTheme.headline6,
         ),
-        elevation: 0.0,
         actions: _showSkipButton(context, _showSkip),
       ),
       body: Padding(

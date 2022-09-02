@@ -64,9 +64,6 @@ class EnterBackupPhrasePageState extends State<EnterBackupPhrasePage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: themeData.appBarTheme.iconTheme,
-          textTheme: themeData.appBarTheme.textTheme,
-          backgroundColor: themeData.canvasColor,
           automaticallyImplyLeading: false,
           leading: backBtn.BackButton(
             onPressed: () {
@@ -85,9 +82,7 @@ class EnterBackupPhrasePageState extends State<EnterBackupPhrasePage> {
               _currentPage.toString(),
               _lastPage.toString(),
             ),
-            style: themeData.appBarTheme.textTheme.headline6,
           ),
-          elevation: 0.0,
         ),
         body: SingleChildScrollView(
           child: Container(

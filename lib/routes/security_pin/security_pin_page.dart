@@ -108,16 +108,9 @@ class SecurityPageState extends State<SecurityPage>
 
             return Scaffold(
               appBar: AppBar(
-                iconTheme: themeData.appBarTheme.iconTheme,
-                textTheme: themeData.appBarTheme.textTheme,
-                backgroundColor: themeData.canvasColor,
                 automaticallyImplyLeading: false,
                 leading: backBtn.BackButton(),
-                title: Text(
-                  texts.security_and_backup_title,
-                  style: themeData.appBarTheme.textTheme.headline6,
-                ),
-                elevation: 0.0,
+                title: Text(texts.security_and_backup_title),
               ),
               body: ListView(
                 children: _buildSecurityPINTiles(

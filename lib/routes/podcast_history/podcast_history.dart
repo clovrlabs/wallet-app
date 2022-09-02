@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
@@ -15,9 +16,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:provider/provider.dart';
+
 import '../../bloc/blocs_provider.dart';
 import '../../bloc/podcast_history/actions.dart';
 import '../../bloc/podcast_history/podcast_history_bloc.dart';
@@ -74,16 +76,9 @@ class PodcastHistoryPageState extends State<PodcastHistoryPage> {
     final themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: themeData.appBarTheme.iconTheme,
-        textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
         automaticallyImplyLeading: false,
         leading: backBtn.BackButton(),
-        title: Text(
-          _getAppBarDisplayString(timeRange, context),
-          style: themeData.appBarTheme.textTheme.headline6,
-        ),
-        elevation: 0.0,
+        title: Text(_getAppBarDisplayString(timeRange, context)),
         actions: [
           PopupMenuButton<PodcastHistoryTimeRange>(
             color: themeData.canvasColor,

@@ -45,16 +45,9 @@ class _SetAdminPasswordState extends State<SetAdminPasswordPage> {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: themeData.appBarTheme.iconTheme,
-        textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
         automaticallyImplyLeading: false,
         leading: backBtn.BackButton(),
-        title: Text(
-          texts.pos_password_admin_title,
-          style: themeData.appBarTheme.textTheme.headline6,
-        ),
-        elevation: 0.0,
+        title: Text(texts.pos_password_admin_title),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),

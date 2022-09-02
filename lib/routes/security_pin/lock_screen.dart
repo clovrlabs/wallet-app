@@ -36,13 +36,9 @@ class AppLockScreen extends StatelessWidget {
       child: Scaffold(
         appBar: canCancel == true
             ? AppBar(
-                iconTheme: themeData.appBarTheme.iconTheme,
-                textTheme: themeData.appBarTheme.textTheme,
-                backgroundColor: themeData.canvasColor,
                 leading: backBtn.BackButton(
                   onPressed: () => Navigator.pop(context, false),
                 ),
-                elevation: 0.0,
               )
             : null,
         body: PinCodeWidget(

@@ -8,6 +8,7 @@ import 'package:breez/widgets/route.dart';
 import 'package:breez/widgets/single_button_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'generate_backup_phrase_page.dart';
 
 class BackupPhraseGeneratorConfirmationPage extends StatefulWidget {
@@ -22,21 +23,15 @@ class BackupPhraseGeneratorConfirmationPageState
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: themeData.appBarTheme.iconTheme,
-        textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
         automaticallyImplyLeading: false,
         leading: backBtn.BackButton(),
         title: AutoSizeText(
           texts.backup_phrase_generate,
-          style: themeData.appBarTheme.textTheme.headline6,
           maxLines: 1,
         ),
-        elevation: 0.0,
       ),
       body: Column(
         children: [

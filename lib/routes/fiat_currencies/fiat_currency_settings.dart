@@ -54,15 +54,8 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
 
         return Scaffold(
           appBar: AppBar(
-            iconTheme: themeData.appBarTheme.iconTheme,
-            textTheme: themeData.appBarTheme.textTheme,
-            backgroundColor: themeData.canvasColor,
             leading: backBtn.BackButton(),
-            title: Text(
-              texts.fiat_currencies_title,
-              style: themeData.appBarTheme.textTheme.headline6,
-            ),
-            elevation: 0.0,
+            title: Text(texts.fiat_currencies_title),
           ),
           body: DragAndDropLists(
             listPadding: EdgeInsets.zero,
