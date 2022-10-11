@@ -14,6 +14,7 @@ import 'package:breez/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -167,7 +168,7 @@ class PodcastHistoryPageState extends State<PodcastHistoryPage> {
                         final imagePath =
                             await File('${directory.path}/image.jpg').create();
                         await imagePath.writeAsBytes(image);
-                        await Share.shareFiles([imagePath.path],
+                        await Share.shareXFiles([XFile(imagePath.path)],
                             text: "My " +
                                 _getAppBarDisplayString(timeRange, context) +
                                 " in Breez ⚡ Download here: https://breez.technology");
