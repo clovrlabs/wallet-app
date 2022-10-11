@@ -15,7 +15,7 @@ dependencies:
   bip39: ^1.0.6
   collection: ^1.16.0
   confetti: ^0.7.0
-  connectivity_plus: ^2.3.7
+  connectivity_plus: ^2.3.9
   crypto: ^3.0.2
   csv: ^5.0.1
   dio: ^4.0.6
@@ -23,11 +23,12 @@ dependencies:
   duration: ^3.0.12
   email_validator: ^2.1.17
   extended_image: ^6.3.1
-  file_picker: ^5.2.0+1
+  ffmpeg_kit_flutter_https_gpl: ^5.1.0
+  file_picker: ^5.2.1
   firebase_core: ^1.24.0
-  firebase_database: ^9.1.6
-  firebase_dynamic_links: ^4.3.9
-  firebase_messaging: ^13.0.4
+  firebase_database: ^9.1.7
+  firebase_dynamic_links: ^4.3.10
+  firebase_messaging: ^13.1.0
   flutter_secure_storage: ^6.0.0
   flutter_svg: ^1.1.5
   flutter_web_browser: ^0.17.1
@@ -36,18 +37,20 @@ dependencies:
   hex: ^0.2.0
   image: ^3.2.0
   image_cropper: ^3.0.0
-  image_picker: ^0.8.5+3
+  image_picker: ^0.8.6
   ini: ^2.1.0
   intl: ^0.17.0
   json_annotation: ^4.7.0
   local_auth: <2.0.0
-  logging: ^1.0.2
-  md5_file_checksum: ^1.0.3
+  logging: ^1.1.0
+  md5_file_checksum: ^1.0.4
   nfc_manager: ^3.2.0
-  package_info_plus: ^1.4.3+1
+  package_info_plus: ^2.0.0
+  path: ^1.8.2
   path_provider: ^2.0.11
   printing: ^5.9.3
   protobuf: ^2.1.0
+  meta: ^1.8.0
   mobile_scanner: ^2.0.0
   scan: ^1.6.0
   # qr_flutter has already fixed the build issue with the qr package but did not publish an updated
@@ -59,11 +62,11 @@ dependencies:
       ref: 1fc6e38c198a76a6fd60b7bd3b4c190cd6c9330b
   rxdart: ^0.27.5
   screenshot: ^1.2.3
-  share_plus: ^4.4.0
+  share_plus: ^4.5.3
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
   simple_animations: ^5.0.0+2
-  sqflite: ^2.1.0
+  sqflite: ^2.1.0+1
   timeago: ^3.3.0
   tutorial_coach_mark: ^1.2.4
   uni_links: ^0.5.1
@@ -72,7 +75,6 @@ dependencies:
   validators: ^3.0.0
   webdav_client: ^1.1.8
   webview_flutter: ^3.0.4
-  ffmpeg_kit_flutter_https_gpl: ^4.5.1
 
   anytime:
     git:
@@ -91,8 +93,6 @@ dependencies:
       url: https://github.com/breez/ShareExtend.git
 
 dependency_overrides:
-  meta: ^1.8.0
-  path: ^1.8.2
   flutter_downloader:
     git:
       url: https://github.com/breez/flutter_downloader.git
@@ -105,8 +105,8 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.2.1
-  json_serializable: ^6.4.1
+  build_runner: ^2.3.0
+  json_serializable: ^6.5.1
   mockito: ^5.3.2
   sqflite_common_ffi: ^2.1.1+1
   test: any
