@@ -596,7 +596,7 @@ class SnapshotInfo {
   SnapshotInfo(
       this.nodeID, this.modifiedTime, this.encrypted, this.encryptionType) {
     print(
-        "New Snapshot encrypted = ${this.encrypted} encrytionType = ${this.encryptionType}");
+        "New Snapshot encrypted = ${this.encrypted} encryptionType = ${this.encryptionType}");
   }
 
   SnapshotInfo.fromJson(Map<String, dynamic> json)

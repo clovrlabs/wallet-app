@@ -295,7 +295,7 @@ class AccountBloc {
     toSort.sort((f1, f2) =>
         f1.currencyData.shortName.compareTo(f2.currencyData.shortName));
 
-    // Then give precendence to the preferred items.
+    // Then give precedence to the preferred items.
     _currentUser.preferredCurrencies.reversed.forEach((p) {
       var preferred = toSort.firstWhere((e) => e.currencyData.shortName == p,
           orElse: () => null);
@@ -396,7 +396,7 @@ class AccountBloc {
     });
 
     _backgroundService.runAsTask(sendRequest, () {
-      log.info("sendpayment background task finished");
+      log.info("sendPayment background task finished");
     });
     action.resolve(await sendRequest);
   }
@@ -719,7 +719,7 @@ class AccountBloc {
 
   _refreshLSPActivity() {
     _breezLib.lspActivity().then((lspActivity) {
-      print("--- LSPACtivity --- ");
+      print("--- LSPActivity --- ");
       print(lspActivity);
       _lspActivityController.add(lspActivity);
     });

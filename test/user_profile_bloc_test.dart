@@ -19,7 +19,7 @@ void main() {
       new BlocTester<void, BreezUserModel>(_userProfileBloc.userStream, (user) => expect(user.userID, null));        
     });
 
-    test("shoud return registered user", () async{
+    test("should return registered user", () async{
       _userProfileBloc.registerSink.add(null);
       var userID  = await _userProfileBloc.userStream.firstWhere((p) => p != null && p.userID != null).then((p) => p.userID);
       expect(userID, isNotNull);
