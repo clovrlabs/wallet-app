@@ -118,10 +118,12 @@ void sqfliteFfiInitAsMockMethodCallHandler() {
     MethodChannel('com.tekartik.sqflite'),
     (methodCall) async {
       try {
-        return await FfiMethodCall(
-          methodCall.method,
-          methodCall.arguments,
-        ).handleInIsolate();
+        return await ffiMethodCallhandleInIsolate(
+          FfiMethodCall(
+            methodCall.method,
+            methodCall.arguments,
+          ),
+        );
       } on SqfliteFfiException catch (e) {
         throw PlatformException(
           code: e.code,
