@@ -30,9 +30,7 @@ class BarcodeScannerPlaceholder extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         appBar: AppBar(
-          leading: backBtn.BackButton(
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+          leading: backBtn.BackButton(),
         ),
         backgroundColor: Colors.black,
         body: Padding(

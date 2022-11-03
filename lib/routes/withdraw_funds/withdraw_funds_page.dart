@@ -85,9 +85,7 @@ class WithdrawFundsPageState extends State<WithdrawFundsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: backBtn.BackButton(
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: backBtn.BackButton(),
         title: Text(widget.title),
       ),
       body: StreamBuilder<AccountModel>(
