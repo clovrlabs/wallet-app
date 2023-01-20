@@ -111,7 +111,6 @@ class BackupBloc {
 
   BackupBloc(
     Stream<ClovrUserModel> userStream,
-    // Stream<bool> backupAnytimeDBStream,
   ) {
     _initAppDataPathAndDir();
     ServiceInjector injector = ServiceInjector();
@@ -129,7 +128,6 @@ class BackupBloc {
       await _initializePersistentData();
       _listenBackupPaths();
       _listenBackupNowRequests();
-      // _listenAppDataBackupRequests(backupAnytimeDBStream);
       _listenRestoreRequests();
       _scheduleBackgroundTasks();
 
@@ -375,8 +373,8 @@ class BackupBloc {
     _breezLib.requestBackup();
   }
 
-  void _listenAppDataBackupRequests(Stream backupAnytimeDBStream) {
-    Rx.merge([backupAnytimeDBStream, _backupAppDataController.stream])
+  void _listenAppDataBackupRequests() {
+    Rx.merge([_backupAppDataController.stream])
         .listen((_) => _backupAppData());
   }
 
@@ -533,7 +531,6 @@ class BackupBloc {
     try {
       await _restoreLightningFees();
       await _restorePosDB();
-      await _restorePodcastsDB();
     } on Exception catch (exception) {
       throw exception;
     }

@@ -20,7 +20,7 @@ import 'bloc/backup/backup_model.dart';
 import 'bloc/user_profile/user_profile_bloc.dart';
 
 void main() async {
-  runZonedGuarded(() async {
+  // runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     BreezLogger();
     SystemChrome.setPreferredOrientations(
@@ -28,19 +28,19 @@ void main() async {
     BreezDateUtils.setupLocales();
     await Firebase.initializeApp();
     SharedPreferences.getInstance().then((preferences) async {
-      // await runMigration(preferences);
+       await runMigration(preferences);
       runApp(AppBlocsProvider(
           child: WalletManager(), appBlocs: AppBlocs()));
     });
-  }, (error, stackTrace) async {
-    stackTrace.toString();
-    print(error.toString());
-    BreezBridge breezBridge = ServiceInjector().breezBridge;
-    if (error is! FlutterErrorDetails) {
-      breezBridge.log(
-          error.toString() + '\n' + stackTrace.toString(), "FlutterError");
-    }
-  });
+  // }, (error, stackTrace) async {
+  //   stackTrace.toString();
+  //   print(error.toString());
+  //   BreezBridge breezBridge = ServiceInjector().breezBridge;
+  //   if (error is! FlutterErrorDetails) {
+  //     breezBridge.log(
+  //         error.toString() + '\n' + stackTrace.toString(), "FlutterError");
+  //   }
+  // });
 }
 
 Future runMigration(SharedPreferences preferences) async {
