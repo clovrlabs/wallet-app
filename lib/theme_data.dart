@@ -38,7 +38,7 @@ final CustomData whiteThemeCustomData = CustomData(
   loaderColorBlendMode: BlendMode.multiply,
   loaderAssetPath: 'src/images/loader.gif',
   dashboardBgColor: Color.fromRGBO(255, 255, 255, 1.0),
-  pendingTextColor: Color(0xffffffff),
+  pendingTextColor: Color(0xFFFFFFFF),
   paymentListBgColor: Color(0xFFf9f9f9),
   paymentListDividerColor: Color.fromRGBO(0, 0, 0, 0.12),
   navigationDrawerBgColor: ClovrLabsWalletColors.dark_grey[500],
