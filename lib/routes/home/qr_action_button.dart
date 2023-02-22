@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clovrlabs_wallet/bloc/account/account_model.dart';
 import 'package:clovrlabs_wallet/bloc/blocs_provider.dart';
 import 'package:clovrlabs_wallet/bloc/invoice/invoice_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:clovrlabs_wallet/services/injector.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
 import 'package:clovrlabs_wallet/utils/bip21.dart';
 import 'package:clovrlabs_wallet/utils/btc_address.dart';
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/utils/lnurl.dart';
 import 'package:clovrlabs_wallet/utils/node_id.dart';
 import 'package:clovrlabs_wallet/widgets/error_dialog.dart';
@@ -23,6 +25,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:validators/validators.dart';
+
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
 
 class QrActionButton extends StatelessWidget {
   final AccountModel account;
@@ -38,6 +43,7 @@ class QrActionButton extends StatelessWidget {
     final texts = AppLocalizations.of(context);
     final invoiceBloc = AppBlocsProvider.of<InvoiceBloc>(context);
     final lnurlBloc = AppBlocsProvider.of<LNUrlBloc>(context);
+    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
 
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
@@ -45,6 +51,7 @@ class QrActionButton extends StatelessWidget {
         width: 64,
         height: 64,
         child: FloatingActionButton(
+          // backgroundColor: colorScheme.backgroundColorQR.toColor(),
           onPressed: () async {
             final scannedString = await Navigator.pushNamed<String>(
               context,
@@ -140,12 +147,11 @@ class QrActionButton extends StatelessWidget {
               );
             }
           },
-          child: SvgPicture.asset(
-            "src/icon/qr_scan.svg",
-            color: theme.ClovrLabsWalletColors.white[500],
-            fit: BoxFit.contain,
-            width: 24.0,
+          child: CachedNetworkImage(
+            imageUrl: colorScheme.iconBottomTabPhoto,
+            color: colorScheme.iconBottomTabPhotoTint.toColor(),
             height: 24.0,
+            width: 24.0,
           ),
         ),
       ),
