@@ -43,7 +43,7 @@ class QrActionButton extends StatelessWidget {
     final texts = AppLocalizations.of(context);
     final invoiceBloc = AppBlocsProvider.of<InvoiceBloc>(context);
     final lnurlBloc = AppBlocsProvider.of<LNUrlBloc>(context);
-    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
 
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),

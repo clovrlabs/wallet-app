@@ -28,7 +28,7 @@ import '../../widgets/styles/app_color_scheme.dart';
 class BottomActionsBar extends StatelessWidget {
   final AccountModel account;
   final GlobalKey firstPaymentItemKey;
-  final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+  final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
   BottomActionsBar(this.account, this.firstPaymentItemKey);
 
   @override

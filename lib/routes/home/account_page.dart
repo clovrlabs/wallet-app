@@ -44,7 +44,7 @@ class AccountPage extends StatefulWidget {
 class AccountPageState extends State<AccountPage>
     with SingleTickerProviderStateMixin {
   final currencyList = Currency.currencies.map((c) => c.tickerSymbol).toList();
-  final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+  final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
 
   AccountBloc _accountBloc;
   UserProfileBloc _userProfileBloc;

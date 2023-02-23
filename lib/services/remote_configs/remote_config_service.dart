@@ -11,11 +11,10 @@ class RemoteConfigService {
       StreamController<dynamic>.broadcast();
 
   Stream<dynamic> get fetchingErrorStream => _fetchingError.stream;
+
   StreamController<dynamic> get fetchingErrorController => _fetchingError;
 
-
-  Future<FirebaseRemoteConfig>  setupRemoteConfig() async {
-
+  Future<FirebaseRemoteConfig> setupRemoteConfig() async {
     final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
     await _remoteConfig.ensureInitialized();
     await _remoteConfig.setConfigSettings(RemoteConfigSettings(
@@ -26,8 +25,12 @@ class RemoteConfigService {
     //   'welcome': 'default welcome',
     //   'hello': 'default hello',
     // })
-     await _remoteConfig.fetchAndActivate();
-   await setupColorScheme(_remoteConfig.getString("main_screen"), _remoteConfig.getString("drawer_screen"));
+    await _remoteConfig.fetchAndActivate();
+    await setupColorScheme(
+      _remoteConfig.getString("main_screen"),
+      _remoteConfig.getString("drawer_screen"),
+      _remoteConfig.getString("fiat_currency"),
+    );
     // await print(_remoteConfig.getString("main_screen"));
 //    await _remoteConfig.fetchAndActivate();
     // RemoteConfigValue([1], ValueSource.valueStatic);_

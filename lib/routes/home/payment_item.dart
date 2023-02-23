@@ -41,7 +41,7 @@ class PaymentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    final remoteScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final remoteScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Padding(
       padding: const EdgeInsets.only(bottom: BOTTOM_PADDING, left: 8, right: 8),
       child: ClipRRect(

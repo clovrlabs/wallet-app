@@ -230,7 +230,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
   ) {
     final themeData = Theme.of(context);
     final mediaSize = MediaQuery.of(context).size;
-    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Container(
       height: mediaSize.height,
       width: mediaSize.width,
@@ -301,7 +301,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     List<AddFundVendorModel> vendor,
     AppLocalizations texts,
   ) {
-    final colorScheme = locator.get<AppColorScheme>().drawerItemConfig;
+    final colorScheme = locator.get<AppConfigScheme>().drawerItemConfig;
     return NavigationDrawerClovrApp(
       true,
       [
