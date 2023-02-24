@@ -4,9 +4,9 @@ import '../widgets/styles/app_color_scheme.dart';
 
 GetIt locator = GetIt.instance;
 
-Future<void> setupColorScheme(String mainScreen, String drawerScreen) async {
+Future<void> setupColorScheme(String mainScreen, String drawerScreen, String currencyScreen) async {
 
   locator.allowReassignment=true;
 
-  locator.registerFactory(() => AppColorScheme(mainScreen, drawerScreen));
+  locator.registerFactory(() => AppConfigScheme(mainScreen, drawerScreen, currencyScreen));
 }

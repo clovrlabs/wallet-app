@@ -70,7 +70,7 @@ class NavigationDrawerClovrApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final userProfileBloc = AppBlocsProvider.of<UserProfileBloc>(context);
-    final colorScheme = locator.get<AppColorScheme>().drawerItemConfig;
+    final colorScheme = locator.get<AppConfigScheme>().drawerItemConfig;
 
     List<Widget> children = [
       _walletDrawerHeader(userProfileBloc, _avatar, colorScheme),
@@ -170,7 +170,7 @@ StreamBuilder<ClovrUserModel> _buildDrawerHeaderContent(
   return StreamBuilder<ClovrUserModel>(
     stream: user.userStream,
     builder: (context, snapshot) {
-      final colorScheme = locator.get<AppColorScheme>().drawerItemConfig;
+      final colorScheme = locator.get<AppConfigScheme>().drawerItemConfig;
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

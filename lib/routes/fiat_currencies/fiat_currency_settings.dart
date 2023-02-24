@@ -6,13 +6,18 @@ import 'package:clovrlabs_wallet/bloc/user_profile/user_actions.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/user_profile_bloc.dart';
 import 'package:clovrlabs_wallet/services/currency_data.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
 import 'package:clovrlabs_wallet/widgets/flushbar.dart';
 import 'package:clovrlabs_wallet/widgets/loader.dart';
+import 'package:clovrlabs_wallet/widgets/styles/fiat_currency_remote_confs.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
 
 const double ITEM_HEIGHT = 72.0;
 
@@ -46,28 +51,29 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
         final account = snapshot.data;
-
-        if (account.fiatConversionList.isEmpty ||
-            account.fiatCurrency == null) {
-          return Loader();
-        }
+        final remoteConfigs =
+            locator.get<AppConfigScheme>().fiatCurrencyRemoteConfs;
 
         return Scaffold(
           appBar: AppBar(
             iconTheme: themeData.appBarTheme.iconTheme,
             textTheme: themeData.appBarTheme.textTheme,
-            backgroundColor: themeData.canvasColor,
-            leading: backBtn.BackButton(),
+            backgroundColor: remoteConfigs.background.toColor(),
+            leading: backBtn.BackButton(
+              color: remoteConfigs.backArrowColor.toColor(),
+            ),
             title: Text(
               texts.fiat_currencies_title,
-              // style: themeData.appBarTheme.textTheme.headline6,
+              style: TextStyle(
+                color: remoteConfigs.txtColorTitle.toColor(),
+              ),
             ),
             elevation: 0.0,
           ),
           body: DragAndDropLists(
             listPadding: EdgeInsets.zero,
             children: [
-              _buildList(context, account),
+              _buildList(context, account, remoteConfigs),
             ],
             lastListTargetSize: 0,
             lastItemTargetHeight: 8,
@@ -80,7 +86,7 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
                 padding: const EdgeInsets.all(16.0),
                 child: Icon(
                   Icons.drag_handle,
-                  color: theme.ClovrLabsWalletColors.white[200],
+                  color: remoteConfigs.icEqual.toColor(),
                 ),
               ),
             ),
@@ -93,13 +99,14 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
   DragAndDropList _buildList(
     BuildContext context,
     AccountModel account,
+    FiatCurrencyRemoteConfs remoteConfigs,
   ) {
     return DragAndDropList(
       header: SizedBox(),
       canDrag: false,
       children: List.generate(account.fiatConversionList.length, (index) {
         return DragAndDropItem(
-          child: _buildFiatCurrencyTile(context, account, index),
+          child: _buildFiatCurrencyTile(context, account, index, remoteConfigs),
           canDrag: account.preferredCurrencies.contains(
             account.fiatConversionList[index].currencyData.shortName,
           ),
@@ -139,19 +146,26 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
     BuildContext context,
     AccountModel account,
     int index,
+    FiatCurrencyRemoteConfs remoteConfigs,
   ) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
 
     final fiatConversion = account.fiatConversionList[index];
     final currencyData = fiatConversion.currencyData;
     final prefCurrencies = account.preferredCurrencies;
 
-    return CheckboxListTile(
-      key: Key("tile-index-$index"),
-      controlAffinity: ListTileControlAffinity.leading,
-      activeColor: Colors.white,
-      checkColor: themeData.canvasColor,
+    return Theme(
+
+      data: ThemeData(
+        unselectedWidgetColor: remoteConfigs.checkboxColorInactive.toColor(),
+        primaryColor: remoteConfigs.background.toColor(),
+      ),
+      child: CheckboxListTile(
+          key: Key("tile-index-$index"),
+          checkColor: remoteConfigs.background.toColor(),  // for the actual check mark
+          activeColor: remoteConfigs.checkboxColorActive.toColor(),
+          controlAffinity: ListTileControlAffinity.leading,
+       tileColor: remoteConfigs.background.toColor(),
       value: prefCurrencies.contains(currencyData.shortName),
       onChanged: (bool checked) {
         setState(() {
@@ -178,20 +192,27 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
       },
       subtitle: Text(
         _subtitle(texts, currencyData),
-        style: theme.fiatConversionDescriptionStyle,
+        style: theme.fiatConversionDescriptionStyle.copyWith(
+          color: remoteConfigs.txtColorAmountFull.toColor(),
+        ),
       ),
       title: RichText(
         text: TextSpan(
           text: currencyData.shortName,
-          style: theme.fiatConversionTitleStyle,
+          style: theme.fiatConversionTitleStyle.copyWith(
+            color: remoteConfigs.txtColorAmountShort.toColor(),
+          ),
           children: [
             TextSpan(
               text: " (${currencyData.symbol})",
-              style: theme.fiatConversionDescriptionStyle,
+              style: theme.fiatConversionDescriptionStyle.copyWith(
+                color: remoteConfigs.txtColorAmountShort.toColor(),
+              ),
             ),
           ],
         ),
-      ),
+      )
+    ),
     );
   }
 

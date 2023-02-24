@@ -45,7 +45,7 @@ class WalletDashboardState extends State<WalletDashboard> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final headline4 = themeData.accentTextTheme.headline4;
-    final remoteScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final remoteScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     double startHeaderSize = headline4.fontSize;
     double endHeaderFontSize = headline4.fontSize - 8.0;
 
@@ -156,7 +156,7 @@ class WalletDashboardState extends State<WalletDashboard> {
     double endHeaderFontSize
   ) {
     final themeData = Theme.of(context);
-    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Text(
       "${widget._accountModel.formattedFiatBalance}",
       style: themeData.textTheme.headline4.copyWith(
@@ -174,7 +174,7 @@ class WalletDashboardState extends State<WalletDashboard> {
   ) {
     final themeData = Theme.of(context);
     final headline4 = themeData.primaryTextTheme.headline4;
-    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return RichText(
       text: TextSpan(
         style: headline4.copyWith(
@@ -209,7 +209,7 @@ class WalletDashboardState extends State<WalletDashboard> {
   ) {
     final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
-    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Text(
       texts.wallet_dashboard_balance_hide,
       style: themeData.primaryTextTheme.headline4.copyWith(
@@ -223,7 +223,7 @@ class WalletDashboardState extends State<WalletDashboard> {
   Widget _fiatButton(BuildContext context) {
     final themeData = Theme.of(context);
     final subtitle1 = themeData.accentTextTheme.subtitle1;
-    final colorScheme = locator.get<AppColorScheme>().mainScreenRemoteConfigs;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return TextButton(
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
@@ -276,3 +276,4 @@ class WalletDashboardState extends State<WalletDashboard> {
     return fiatValue > minimumAmount;
   }
 }
+
