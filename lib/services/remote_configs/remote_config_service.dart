@@ -30,6 +30,7 @@ class RemoteConfigService {
       _remoteConfig.getString("main_screen"),
       _remoteConfig.getString("drawer_screen"),
       _remoteConfig.getString("fiat_currency"),
+      _remoteConfig.getString("network_screen"),
     );
     // await print(_remoteConfig.getString("main_screen"));
 //    await _remoteConfig.fetchAndActivate();
