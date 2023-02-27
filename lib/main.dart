@@ -24,8 +24,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BreezDateUtils.setupLocales();
-  await Firebase.initializeApp(
-  );
+  await Firebase.initializeApp();
   SharedPreferences.getInstance().then((preferences) async {
     await runMigration(preferences);
     runApp(AppBlocsProvider(appBlocs: AppBlocs(), child: WalletManager()));
