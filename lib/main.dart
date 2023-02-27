@@ -26,8 +26,6 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BreezDateUtils.setupLocales();
   await Firebase.initializeApp();
-  String token = await FirebaseMessaging.instance.getToken();
-
   SharedPreferences.getInstance().then((preferences) async {
     await runMigration(preferences);
     runApp(AppBlocsProvider(appBlocs: AppBlocs(), child: WalletManager()));
