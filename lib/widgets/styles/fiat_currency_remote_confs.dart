@@ -35,7 +35,7 @@ class FiatCurrencyRemoteConfs {
     _checkColorActive = checkColorActive;
   }
 
-  FiatCurrencyRemoteConfs.fromJson(dynamic json) {
+  FiatCurrencyRemoteConfs.fromJson(Map<String, dynamic> json) {
     _txtColorTitle = json['txt_color_title'];
     _backArrowColor = json['back_arrow_color'];
     _checkboxColorActive = json['checkbox_color_active'];

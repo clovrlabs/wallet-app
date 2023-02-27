@@ -7,6 +7,7 @@ import 'package:clovrlabs_wallet/bloc/user_profile/security_model.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/user_actions.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/user_profile_bloc.dart';
 import 'package:clovrlabs_wallet/routes/backup_in_progress_dialog.dart';
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/utils/theme.dart';
 import 'package:clovrlabs_wallet/routes/security_pin/remote_server_auth.dart';
 import 'package:clovrlabs_wallet/services/local_auth_service.dart';
@@ -17,11 +18,14 @@ import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
 import 'package:clovrlabs_wallet/widgets/error_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/flushbar.dart';
 import 'package:clovrlabs_wallet/widgets/route.dart';
+import 'package:clovrlabs_wallet/widgets/styles/security_backup_screen.dart';
 import 'package:duration/duration.dart';
 import 'package:duration/locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
 import 'backup_phrase/backup_phrase_confirmation_page.dart';
 import 'backup_phrase/backup_phrase_warning_dialog.dart';
 import 'change_pin_code.dart';
@@ -76,7 +80,7 @@ class SecurityPageState extends State<SecurityPage>
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
     final themeData = Theme.of(context);
-
+    final remoteScheme = locator.get<AppConfigScheme>().securityBackupScreen;
     return StreamBuilder<BackupState>(
       stream: widget.backupBloc.backupStateStream,
       builder: (ctx, backupStateSnapshot) => StreamBuilder<BackupSettings>(
@@ -107,15 +111,20 @@ class SecurityPageState extends State<SecurityPage>
             }
 
             return Scaffold(
+              backgroundColor: remoteScheme.background.toColor(),
               appBar: AppBar(
                 iconTheme: themeData.appBarTheme.iconTheme,
                 textTheme: themeData.appBarTheme.textTheme,
-                backgroundColor: themeData.canvasColor,
+                backgroundColor: remoteScheme.background.toColor(),
                 automaticallyImplyLeading: false,
-                leading: backBtn.BackButton(),
+                leading: backBtn.BackButton(
+                  color: remoteScheme.backArrowColor.toColor(),
+                ),
                 title: Text(
                   texts.security_and_backup_title,
-                  // style: themeData.appBarTheme.textTheme.headline6,
+                  style: TextStyle(
+                    color: remoteScheme.txtColorTitle.toColor(),
+                  ),
                 ),
                 elevation: 0.0,
               ),
@@ -124,6 +133,7 @@ class SecurityPageState extends State<SecurityPage>
                   context,
                   userModel.securityModel,
                   backupSnapshot.data,
+                  remoteScheme,
                 ),
               ),
               bottomNavigationBar: Padding(
@@ -167,12 +177,14 @@ class SecurityPageState extends State<SecurityPage>
     BuildContext context,
     SecurityModel securityModel,
     BackupSettings backupSettings,
+    SecurityBackupScreen remoteScheme,
   ) {
     List<Widget> _tiles = [
       _buildDisablePINTile(
         context,
         securityModel,
         backupSettings,
+        remoteScheme,
       ),
     ];
     if (securityModel.requiresPin) {
@@ -182,6 +194,7 @@ class SecurityPageState extends State<SecurityPage>
           context,
           securityModel,
           backupSettings,
+          remoteScheme,
         ))
         ..add(Divider())
         ..add(_buildChangePINTile(
@@ -205,6 +218,7 @@ class SecurityPageState extends State<SecurityPage>
         context,
         securityModel,
         backupSettings,
+        remoteScheme,
       ));
     if (backupSettings.backupProvider?.name ==
         BackupSettings.remoteServerBackupProvider().name) {
@@ -222,6 +236,7 @@ class SecurityPageState extends State<SecurityPage>
         context,
         securityModel,
         backupSettings,
+        remoteScheme,
       ));
     return _tiles;
   }
@@ -230,6 +245,7 @@ class SecurityPageState extends State<SecurityPage>
     BuildContext context,
     SecurityModel securityModel,
     BackupSettings backupSettings,
+    SecurityBackupScreen remoteScheme,
   ) {
     final texts = AppLocalizations.of(context);
 
@@ -237,7 +253,9 @@ class SecurityPageState extends State<SecurityPage>
       title: Container(
         child: AutoSizeText(
           texts.security_and_backup_encrypt,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: remoteScheme.txtEncryptCloudBackup.toColor(),
+          ),
           maxLines: 1,
           minFontSize: MinFontSize(context).minFontSize,
           stepGranularity: 0.1,
@@ -246,7 +264,7 @@ class SecurityPageState extends State<SecurityPage>
       ),
       trailing: Switch(
         value: backupSettings.backupKeyType == BackupKeyType.PHRASE,
-        activeColor: Colors.white,
+        activeColor: remoteScheme.txtEncryptCloudBackup.toColor(),
         onChanged: (bool value) async {
           if (this.mounted) {
             if (value) {
@@ -289,6 +307,7 @@ class SecurityPageState extends State<SecurityPage>
     BuildContext context,
     SecurityModel securityModel,
     BackupSettings backupSettings,
+    SecurityBackupScreen remoteScheme,
   ) {
     final texts = AppLocalizations.of(context);
 
@@ -296,7 +315,9 @@ class SecurityPageState extends State<SecurityPage>
       title: Container(
         child: AutoSizeText(
           texts.security_and_backup_store_location,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: remoteScheme.txtStoreBackupData.toColor(),
+          ),
           maxLines: 1,
           minFontSize: MinFontSize(context).minFontSize,
           stepGranularity: 0.1,
@@ -305,7 +326,7 @@ class SecurityPageState extends State<SecurityPage>
       ),
       trailing: DropdownButtonHideUnderline(
         child: DropdownButton<BackupProvider>(
-          iconEnabledColor: Colors.white,
+          iconEnabledColor: remoteScheme.txtEncryptCloudBackup.toColor(),
           value: backupSettings.backupProvider,
           isDense: true,
           onChanged: (BackupProvider newValue) {
@@ -357,6 +378,7 @@ class SecurityPageState extends State<SecurityPage>
     BuildContext context,
     SecurityModel securityModel,
     BackupSettings backupSettings,
+    SecurityBackupScreen remoteScheme,
   ) {
     final texts = AppLocalizations.of(context);
 
@@ -364,7 +386,9 @@ class SecurityPageState extends State<SecurityPage>
       title: Container(
         child: AutoSizeText(
           texts.security_and_backup_lock_automatically,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: remoteScheme.txtCreatePinArrow.toColor(),
+          ),
           maxLines: 1,
           minFontSize: MinFontSize(context).minFontSize,
           stepGranularity: 0.1,
@@ -373,7 +397,7 @@ class SecurityPageState extends State<SecurityPage>
       ),
       trailing: DropdownButtonHideUnderline(
         child: DropdownButton(
-          iconEnabledColor: Colors.white,
+          iconEnabledColor: remoteScheme.txtCreatePinArrow.toColor(),
           value: securityModel.automaticallyLockInterval,
           isDense: true,
           onChanged: (int newValue) {
@@ -563,6 +587,7 @@ class SecurityPageState extends State<SecurityPage>
     BuildContext context,
     SecurityModel securityModel,
     BackupSettings backupSettings,
+    SecurityBackupScreen remoteScheme,
   ) {
     final texts = AppLocalizations.of(context);
 
@@ -571,7 +596,9 @@ class SecurityPageState extends State<SecurityPage>
         securityModel.requiresPin
             ? texts.security_and_backup_pin_option_deactivate
             : texts.security_and_backup_pin_option_create,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: remoteScheme.txtCreatePinArrow.toColor(),
+        ),
         maxLines: 1,
         minFontSize: MinFontSize(context).minFontSize,
         stepGranularity: 0.1,
@@ -580,7 +607,7 @@ class SecurityPageState extends State<SecurityPage>
       trailing: securityModel.requiresPin
           ? Switch(
               value: securityModel.requiresPin,
-              activeColor: Colors.white,
+              activeColor: remoteScheme.txtCreatePinArrow.toColor(),
               onChanged: (bool value) {
                 if (this.mounted) {
                   _resetSecurityModel(context);
@@ -589,7 +616,7 @@ class SecurityPageState extends State<SecurityPage>
             )
           : Icon(
               Icons.keyboard_arrow_right,
-              color: Colors.white,
+              color: remoteScheme.txtCreatePinArrow.toColor(),
               size: 30.0,
             ),
       onTap: securityModel.requiresPin

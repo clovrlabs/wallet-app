@@ -22,6 +22,9 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
+
 class WithdrawFundsPage extends StatefulWidget {
   final Future Function(Int64 amount, String destAddress, bool isMax) onNext;
   final String initialAddress;
@@ -82,6 +85,7 @@ class WithdrawFundsPageState extends State<WithdrawFundsPage> {
 
     final reverseSwapBloc = AppBlocsProvider.of<ReverseSwapBloc>(context);
     final accountBloc = AppBlocsProvider.of<AccountBloc>(context);
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
 
     return Scaffold(
       appBar: AppBar(

@@ -8,7 +8,8 @@ Future<void> setupColorScheme(
   String mainScreen,
   String drawerScreen,
   String currencyScreen,
-  String network,
+    String network,
+  String backupSecurityScreen,
 ) async {
   locator.allowReassignment = true;
 
@@ -16,6 +17,7 @@ Future<void> setupColorScheme(
         mainScreen,
         drawerScreen,
         currencyScreen,
-        network,
+    network,
+        backupSecurityScreen,
       ));
 }

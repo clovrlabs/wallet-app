@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:clovrlabs_wallet/widgets/styles/security_backup_screen.dart';
+
 import 'Network_remote_confs.dart';
 import 'drawer_screen_remote_confs.dart';
 import 'fiat_currency_remote_confs.dart';
@@ -9,6 +11,9 @@ class AppConfigScheme {
   MainScreenRemoteConfs _mainScreenRemoteConfigs;
   DrawerRemoteConfs _drawerItemConfig;
   FiatCurrencyRemoteConfs _fiatCurrencyRemoteConfs;
+  SecurityBackupScreen _securityBackupScreen;
+
+  SecurityBackupScreen get securityBackupScreen => _securityBackupScreen;
   NetworkRemoteConfs _networkRemoteConfs;
 
   MainScreenRemoteConfs get mainScreenRemoteConfigs => _mainScreenRemoteConfigs;
@@ -24,6 +29,7 @@ class AppConfigScheme {
     String mainScreenConfs,
     String drawerItemConfig,
     String fiatCurrencyRemoteConfs,
+    String securityBackupScreen,
     String networkRemoteConfs,
   ) {
     _mainScreenRemoteConfigs = MainScreenRemoteConfs.fromJson(
@@ -37,6 +43,9 @@ class AppConfigScheme {
     );
     _networkRemoteConfs = NetworkRemoteConfs.fromJson(
       json.decode(networkRemoteConfs),
+    );
+    _securityBackupScreen = SecurityBackupScreen.fromJson(
+      json.decode(securityBackupScreen),
     );
   }
 }
