@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:clovrlabs_wallet/bloc/user_profile/clovr_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SplashPage extends StatefulWidget {
   final ClovrUserModel _user;
@@ -46,9 +48,19 @@ class SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(children: <Widget>[
-      Center(
-        child: SizedBox(),
-      ),
-    ]));
+          Center(
+            child: SizedBox(),
+          ),
+        ]));
+    // return   FutureBuilder<FirebaseRemoteConfig>(
+    //   future: setupRemoteConfig(),
+    //   builder: (BuildContext context,
+    //       AsyncSnapshot<FirebaseRemoteConfig> snapshot) {
+    //     log('data: ${snapshot.requireData}');
+    //     print('data: ${snapshot.requireData}');
+    //     return Container();
+    //   },
+    // );
   }
+
 }

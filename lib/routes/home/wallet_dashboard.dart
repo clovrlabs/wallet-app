@@ -5,8 +5,12 @@ import 'package:clovrlabs_wallet/bloc/account/fiat_conversion.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/clovr_user_model.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/currency.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
+import 'package:clovrlabs_wallet/widgets/styles/app_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../app/locator.dart';
 
 class WalletDashboard extends StatefulWidget {
   final AccountModel _accountModel;
@@ -41,11 +45,22 @@ class WalletDashboardState extends State<WalletDashboard> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final headline4 = themeData.accentTextTheme.headline4;
-
+    final remoteScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     double startHeaderSize = headline4.fontSize;
     double endHeaderFontSize = headline4.fontSize - 8.0;
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onLongPressStart: (_) {
+        setState(() {
+          _showFiatCurrency = true;
+        });
+      },
+      onLongPressEnd: (_) {
+        setState(() {
+          _showFiatCurrency = false;
+        });
+      },
       child: Stack(
         alignment: AlignmentDirectional.topCenter,
         children: [
@@ -53,7 +68,7 @@ class WalletDashboardState extends State<WalletDashboard> {
             width: MediaQuery.of(context).size.width,
             height: widget._height,
             decoration: BoxDecoration(
-              color: theme.customData[theme.themeId].dashboardBgColor,
+              color: remoteScheme.backgroundColor.toColor(),
             ),
           ),
           Positioned(
@@ -100,7 +115,7 @@ class WalletDashboardState extends State<WalletDashboard> {
                                       endHeaderFontSize,
                                     ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
             ),
           ),
           Positioned(
@@ -112,22 +127,11 @@ class WalletDashboardState extends State<WalletDashboard> {
                       isAboveMinAmount(widget._accountModel?.fiatCurrency) &&
                       !widget._userModel.hideBalance
                   ? _fiatButton(context)
-                  : SizedBox(),
+                  : const SizedBox(),
             ),
           ),
         ],
       ),
-      behavior: HitTestBehavior.translucent,
-      onLongPressStart: (_) {
-        setState(() {
-          _showFiatCurrency = true;
-        });
-      },
-      onLongPressEnd: (_) {
-        setState(() {
-          _showFiatCurrency = false;
-        });
-      },
     );
   }
 
@@ -149,13 +153,14 @@ class WalletDashboardState extends State<WalletDashboard> {
   Widget _balanceText(
     BuildContext context,
     double startHeaderSize,
-    double endHeaderFontSize,
+    double endHeaderFontSize
   ) {
     final themeData = Theme.of(context);
-
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Text(
       "${widget._accountModel.formattedFiatBalance}",
-      style: themeData.accentTextTheme.headline4.copyWith(
+      style: themeData.textTheme.headline4.copyWith(
+        color: colorScheme.txtAmountColor.toColor(),
         fontSize: startHeaderSize -
             (startHeaderSize - endHeaderFontSize) * widget._offsetFactor,
       ),
@@ -168,11 +173,12 @@ class WalletDashboardState extends State<WalletDashboard> {
     double endHeaderFontSize,
   ) {
     final themeData = Theme.of(context);
-    final headline4 = themeData.accentTextTheme.headline4;
-
+    final headline4 = themeData.primaryTextTheme.headline4;
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return RichText(
       text: TextSpan(
         style: headline4.copyWith(
+          color: colorScheme.txtAmountColor.toColor(),
           fontSize: startHeaderSize -
               (startHeaderSize - endHeaderFontSize) * widget._offsetFactor,
         ),
@@ -185,6 +191,7 @@ class WalletDashboardState extends State<WalletDashboard> {
           TextSpan(
             text: " ${widget._accountModel.currency.displayName}",
             style: headline4.copyWith(
+              color: colorScheme.txtAmountColor.toColor(),
               fontSize: startHeaderSize * 0.6 -
                   (startHeaderSize * 0.6 - endHeaderFontSize) *
                       widget._offsetFactor,
@@ -202,10 +209,11 @@ class WalletDashboardState extends State<WalletDashboard> {
   ) {
     final themeData = Theme.of(context);
     final texts = AppLocalizations.of(context);
-
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Text(
       texts.wallet_dashboard_balance_hide,
-      style: themeData.accentTextTheme.headline4.copyWith(
+      style: themeData.primaryTextTheme.headline4.copyWith(
+        color: colorScheme.txtAmountColor.toColor(),
         fontSize: startHeaderSize -
             (startHeaderSize - endHeaderFontSize) * widget._offsetFactor,
       ),
@@ -215,7 +223,7 @@ class WalletDashboardState extends State<WalletDashboard> {
   Widget _fiatButton(BuildContext context) {
     final themeData = Theme.of(context);
     final subtitle1 = themeData.accentTextTheme.subtitle1;
-
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return TextButton(
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
@@ -240,9 +248,7 @@ class WalletDashboardState extends State<WalletDashboard> {
       child: Text(
         "${widget._accountModel.formattedFiatBalance}",
         style: subtitle1.copyWith(
-          color: subtitle1.color.withOpacity(
-            pow(1.00 - widget._offsetFactor, 2),
-          ),
+          color: colorScheme.txtColorAmountTransaction.toColor(),
         ),
       ),
     );
@@ -270,3 +276,4 @@ class WalletDashboardState extends State<WalletDashboard> {
     return fiatValue > minimumAmount;
   }
 }
+

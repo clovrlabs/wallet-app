@@ -7,11 +7,14 @@ import 'package:clovrlabs_wallet/bloc/user_profile/clovr_user_model.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/currency.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/user_profile_bloc.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/utils/date.dart';
 import 'package:clovrlabs_wallet/widgets/fixed_sliver_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
 import 'payments_filter.dart';
 import 'payments_list.dart';
 import 'status_text.dart';
@@ -41,6 +44,7 @@ class AccountPage extends StatefulWidget {
 class AccountPageState extends State<AccountPage>
     with SingleTickerProviderStateMixin {
   final currencyList = Currency.currencies.map((c) => c.tickerSymbol).toList();
+  final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
 
   AccountBloc _accountBloc;
   UserProfileBloc _userProfileBloc;
@@ -80,7 +84,7 @@ class AccountPageState extends State<AccountPage>
                   builder: (context, snapshot) {
                     final userModel = snapshot.data;
                     return Container(
-                      color: theme.customData[theme.themeId].dashboardBgColor,
+                      color: colorScheme.backgroundColor.toColor(),
                       child: _buildBalanceAndPayments(
                         context,
                         paymentsModel,

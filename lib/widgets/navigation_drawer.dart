@@ -1,16 +1,22 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clovrlabs_wallet/bloc/blocs_provider.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/clovr_user_model.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/user_actions.dart';
 import 'package:clovrlabs_wallet/bloc/user_profile/user_profile_bloc.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
+import 'package:clovrlabs_wallet/widgets/styles/app_color_scheme.dart';
+import 'package:clovrlabs_wallet/widgets/styles/drawer_screen_remote_confs.dart';
 import 'package:clovrlabs_wallet/widgets/wallet_avatar.dart';
 import 'package:clovrlabs_wallet/widgets/breez_drawer_header.dart';
 import 'package:clovrlabs_wallet/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../app/locator.dart';
 
 class DrawerItemConfig {
   final GlobalKey key;
@@ -48,13 +54,13 @@ class DrawerItemConfigGroup {
   });
 }
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawerClovrApp extends StatelessWidget {
   final bool _avatar;
   final List<DrawerItemConfigGroup> _drawerGroupedItems;
   final void Function(String screenName) _onItemSelected;
   final _scrollController = ScrollController();
 
-  NavigationDrawer(
+  NavigationDrawerClovrApp(
     this._avatar,
     this._drawerGroupedItems,
     this._onItemSelected,
@@ -64,23 +70,25 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final userProfileBloc = AppBlocsProvider.of<UserProfileBloc>(context);
+    final colorScheme = locator.get<AppConfigScheme>().drawerItemConfig;
 
     List<Widget> children = [
-      _walletDrawerHeader(userProfileBloc, _avatar),
-      Padding(padding: EdgeInsets.only(top: 16)),
+      _walletDrawerHeader(userProfileBloc, _avatar, colorScheme),
+      const Padding(padding: EdgeInsets.only(top: 16)),
     ];
     _drawerGroupedItems.forEach((groupItems) {
       children.addAll(_createDrawerGroupWidgets(
         groupItems,
         context,
+        colorScheme,
         _drawerGroupedItems.indexOf(groupItems),
-        withDivider: children.length > 0 && groupItems.withDivider,
+        withDivider: children.isNotEmpty && groupItems.withDivider,
       ));
     });
 
     return Theme(
       data: themeData.copyWith(
-        canvasColor: theme.customData[theme.themeId].navigationDrawerBgColor,
+        canvasColor: colorScheme.bottomBgColorDrawer.toColor(),
       ),
       child: Drawer(
         child: ListView(
@@ -96,6 +104,7 @@ class NavigationDrawer extends StatelessWidget {
   List<Widget> _createDrawerGroupWidgets(
     DrawerItemConfigGroup group,
     BuildContext context,
+    DrawerRemoteConfs colorScheme,
     int index, {
     bool withDivider = false,
   }) {
@@ -104,26 +113,30 @@ class NavigationDrawer extends StatelessWidget {
               action,
               context,
               action.onItemSelected ?? _onItemSelected,
+              colorScheme,
             ))
         .toList();
-    if (group.groupTitle != null && groupItems.length > 0) {
+    if (group.groupTitle != null && groupItems.isNotEmpty) {
       groupItems = group.items
           .map((action) => _actionTile(
                 action,
                 context,
                 action.onItemSelected ?? _onItemSelected,
+                colorScheme,
                 subTile: true,
               ))
           .toList();
+      if(colorScheme.isPointOfSaleEnabled)
       groupItems = []..add(_ExpansionTile(
           items: groupItems,
           title: group.groupTitle,
-          icon: AssetImage(group.groupAssetImage),
+          urlIcon: colorScheme.icLinkPreferences,
+          colorIcon: colorScheme.txtColorSelectedItem.toColor(),
           controller: _scrollController,
         ));
     }
 
-    if (groupItems.length > 0 && withDivider && index != 0) {
+    if (groupItems.isNotEmpty && withDivider && index != 0) {
       groupItems.insert(0, _ListDivider());
     }
     return groupItems;
@@ -133,16 +146,17 @@ class NavigationDrawer extends StatelessWidget {
 class _ListDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.only(left: 8.0, right: 8.0),
       child: Divider(),
     );
   }
 }
 
-Widget _walletDrawerHeader(UserProfileBloc user, bool drawAvatar) {
+Widget _walletDrawerHeader(UserProfileBloc user, bool drawAvatar,
+    DrawerRemoteConfs drawerRemoteConfs) {
   return Container(
-    color: theme.customData[theme.themeId].navigationDrawerHeaderBgColor,
+    color: drawerRemoteConfs.topBgColorDrawer.toColor(),
     child: WalletDrawerHeader(
       child: _buildDrawerHeaderContent(user, drawAvatar),
     ),
@@ -156,14 +170,13 @@ StreamBuilder<ClovrUserModel> _buildDrawerHeaderContent(
   return StreamBuilder<ClovrUserModel>(
     stream: user.userStream,
     builder: (context, snapshot) {
-      return Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Image.asset(
-              "src/images/text_logo.png",
-              width: MediaQuery.of(context).size.width,
-            ),
+      final colorScheme = locator.get<AppConfigScheme>().drawerItemConfig;
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: CachedNetworkImage(
+            imageUrl: colorScheme.icTopDrawerLabel,
+            width: MediaQuery.of(context).size.width,
           ),
         ),
       );
@@ -186,7 +199,7 @@ GestureDetector _buildThemeSwitch(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 10,
             right: 16.0,
           ),
@@ -290,15 +303,15 @@ Padding _buildUsername(
 Widget _actionTile(
   DrawerItemConfig action,
   BuildContext context,
-  Function onItemSelected, {
+  Function onItemSelected,
+  DrawerRemoteConfs colorScheme, {
   bool subTile,
 }) {
-  final themeData = Theme.of(context);
   TextStyle itemStyle = theme.drawerItemTextStyle;
 
   Color color;
   if (action.disabled) {
-    color = themeData.disabledColor;
+    color = colorScheme.txtColorItem.toColor();
     itemStyle = itemStyle.copyWith(color: color);
   }
   return Padding(
@@ -311,9 +324,9 @@ Widget _actionTile(
           ? null
           : BoxDecoration(
               color: action.isSelected
-                  ? themeData.primaryColorLight
-                  : Colors.transparent,
-              borderRadius: BorderRadius.horizontal(
+                  ? colorScheme.colorSelectedItem.toColor()
+                  : colorScheme.colorUnSelectedItem.toColor(),
+              borderRadius: const BorderRadius.horizontal(
                 right: Radius.circular(32),
               ),
             ),
@@ -321,19 +334,20 @@ Widget _actionTile(
         key: action.key,
         shape: subTile != null
             ? null
-            : RoundedRectangleBorder(
+            : const RoundedRectangleBorder(
                 borderRadius: BorderRadius.horizontal(
                   right: Radius.circular(32),
                 ),
               ),
         leading: Padding(
           padding: subTile != null
-              ? EdgeInsets.only(left: 28.0)
+              ? const EdgeInsets.only(left: 28.0)
               : const EdgeInsets.symmetric(horizontal: 8.0),
-          child: ImageIcon(
-            AssetImage(action.icon),
-            size: 26.0,
-            color: color,
+          child: CachedNetworkImage(
+            imageUrl: action.icon,
+            color: colorScheme.txtColorSelectedItem.toColor(),
+            height: 26.0,
+            width: 26.0,
           ),
         ),
         title: Padding(
@@ -358,39 +372,41 @@ Widget _actionTile(
 class _ExpansionTile extends StatelessWidget {
   final List<Widget> items;
   final String title;
-  final AssetImage icon;
+  final String urlIcon;
   final ScrollController controller;
+  final Color colorIcon;
 
   const _ExpansionTile({
     Key key,
     this.items,
     this.title,
-    this.icon,
+    this.urlIcon,
+    this.colorIcon,
     this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    final _expansionTileTheme = themeData.copyWith(
+    final expansionTileTheme = themeData.copyWith(
       dividerColor: themeData.canvasColor,
     );
     return Theme(
-      data: _expansionTileTheme,
+      data: expansionTileTheme,
       child: ExpansionTile(
-          iconColor: Colors.white,
+        iconColor: colorIcon,
         title: Padding(
-          padding: EdgeInsets.only(left: 8.0, right: 8.0),
-          child: icon.assetName == ""
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: urlIcon.isEmpty
               ? null
               : Text(
                   title,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
         ),
         leading: Padding(
-          padding: EdgeInsets.only(left: 8.0),
-          child: icon.assetName == ""
+          padding: const EdgeInsets.only(left: 8.0),
+          child: urlIcon.isEmpty
               ? Text(
                   title,
                   style: theme.drawerItemTextStyle.copyWith(
@@ -398,31 +414,33 @@ class _ExpansionTile extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 )
-              : ImageIcon(
-                  icon,
-                  size: 26.0,
-                  color: Colors.white,
+              : CachedNetworkImage(
+            imageUrl: urlIcon,
+                  height: 26.0,
+                  width: 26.0,
+                  color: colorIcon,
                 ),
         ),
-        children: items
-            .map((item) => Padding(
-                  padding: EdgeInsets.only(left: 0.0),
-                  child: item,
-                ))
-            .toList(),
         initiallyExpanded: true,
         onExpansionChanged: (isExpanded) {
-          if (isExpanded)
+          if (isExpanded) {
             Timer(
-              Duration(milliseconds: 200),
+              const Duration(milliseconds: 200),
               () => controller.animateTo(
                 controller.position.maxScrollExtent + 28.0,
-                duration: Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: 400),
                 curve: Curves.ease,
               ),
             );
+          }
           // 28 = bottom padding of list + intrinsic bottom padding
         },
+        children: items
+            .map((item) => Padding(
+                  padding: const EdgeInsets.only(left: 0.0),
+                  child: item,
+                ))
+            .toList(),
       ),
     );
   }

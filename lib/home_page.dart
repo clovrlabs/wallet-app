@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clovrlabs_wallet/bloc/account/account_actions.dart';
 import 'package:clovrlabs_wallet/bloc/account/account_bloc.dart';
 import 'package:clovrlabs_wallet/bloc/account/account_model.dart';
@@ -21,6 +22,7 @@ import 'package:clovrlabs_wallet/routes/charge/pos_invoice.dart';
 import 'package:clovrlabs_wallet/routes/home/bottom_actions_bar.dart';
 import 'package:clovrlabs_wallet/routes/home/qr_action_button.dart';
 import 'package:clovrlabs_wallet/routes/marketplace/marketplace.dart';
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/utils/theme.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
@@ -34,11 +36,14 @@ import 'package:clovrlabs_wallet/widgets/lost_card_dialog.dart' as lostCard;
 import 'package:clovrlabs_wallet/widgets/navigation_drawer.dart';
 import 'package:clovrlabs_wallet/widgets/payment_failed_report_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/route.dart';
+import 'package:clovrlabs_wallet/widgets/styles/app_color_scheme.dart';
+import 'package:clovrlabs_wallet/widgets/styles/drawer_screen_remote_confs.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'app/locator.dart';
 import 'bloc/invoice/invoice_model.dart';
 import 'bloc/user_profile/user_actions.dart';
 import 'handlers/ctp_join_session_handler.dart';
@@ -225,7 +230,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
   ) {
     final themeData = Theme.of(context);
     final mediaSize = MediaQuery.of(context).size;
-
+    final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Container(
       height: mediaSize.height,
       width: mediaSize.width,
@@ -248,11 +253,11 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
               ),
             ],
-            leading: _buildMenuIcon(context, user.appMode),
+            leading: _buildMenuIcon(context, user.appMode, colorScheme.btLogo),
             iconTheme: IconThemeData(
-              color: Color.fromARGB(255, 0, 0, 0),
+              color: colorScheme.iconBottomTabPhotoTint.toColor(),
             ),
-            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            backgroundColor: colorScheme.backgroundColor.toColor(),
             elevation: 0.0,
           ),
           drawerEnableOpenDragGesture: true,
@@ -287,7 +292,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     );
   }
 
-  NavigationDrawer _navigationDrawer(
+  NavigationDrawerClovrApp _navigationDrawer(
     BuildContext context,
     ClovrUserModel user,
     AccountModel account,
@@ -296,22 +301,27 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     List<AddFundVendorModel> vendor,
     AppLocalizations texts,
   ) {
-    return NavigationDrawer(
+    final colorScheme = locator.get<AppConfigScheme>().drawerItemConfig;
+    return NavigationDrawerClovrApp(
       true,
       [
-        // Comment temporary
+        // The temporary comment of the feature
         // ..._drawerConfigRefundItems(
         //   context,
         //   user,
         //   account.swapFundsStatus.maturedRefundableAddresses,
         // ),
-        ..._drawerConfigAppModeItems(context, user, texts),
-        DrawerItemConfigGroup([_drawerItemPos(context, user, texts)]),
-        DrawerItemConfigGroup(
-          _filterItems(_drawerConfigToFilter(context, user, texts)),
-          groupTitle: texts.home_drawer_item_title_preferences,
-          groupAssetImage: "",
-        ),
+        ..._drawerConfigAppModeItems(context, user, texts, colorScheme),
+        if (colorScheme.isPointOfSaleEnabled)
+          DrawerItemConfigGroup(
+              [_drawerItemPos(context, user, texts, colorScheme)]),
+        if (colorScheme.isFiatCurrenciesEnabled)
+          DrawerItemConfigGroup(
+            _filterItems(
+                _drawerConfigToFilter(context, user, texts, colorScheme)),
+            groupTitle: texts.home_drawer_item_title_preferences,
+            groupAssetImage: "",
+          ),
       ],
       _onNavigationItemSelected,
     );
@@ -321,35 +331,41 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     BuildContext context,
     ClovrUserModel user,
     AppLocalizations texts,
+    DrawerRemoteConfs remoteScheme,
   ) {
     return [
-      DrawerItemConfig(
-        "/fiat_currency",
-        texts.home_drawer_item_title_fiat_currencies,
-        "src/icon/fiat_currencies.png",
-      ),
-      DrawerItemConfig(
-        "/network",
-        texts.home_drawer_item_title_network,
-        "src/icon/network.png",
-      ),
-      DrawerItemConfig(
-        "",
-        texts.home_drawer_item_title_security,
-        "src/icon/security.png",
-        onItemSelected: (_) => protectAdminRoute(context, user, "/security"),
-      ),
-      DrawerItemConfig(
-        "",
-        texts.home_drawer_item_title_payment_options,
-        "src/icon/payment_options.png",
-        onItemSelected: (_) => protectAdminRoute(
-          context,
-          user,
-          "/payment_options",
+      if (remoteScheme.isFiatCurrenciesEnabled)
+        DrawerItemConfig(
+          "/fiat_currency",
+          texts.home_drawer_item_title_fiat_currencies,
+          remoteScheme.icLinkFiatCurrencies,
         ),
-      ),
-      ..._drawerConfigAdvancedFlavorItems(context, user, texts),
+      if (remoteScheme.isNetworkEnabled)
+        DrawerItemConfig(
+          "/network",
+          texts.home_drawer_item_title_network,
+          remoteScheme.icLinkNetwork,
+        ),
+      if (remoteScheme.isSecurityBackupEnabled)
+        DrawerItemConfig(
+          "",
+          texts.home_drawer_item_title_security,
+          remoteScheme.icLinkSecurityBackup,
+          onItemSelected: (_) => protectAdminRoute(context, user, "/security"),
+        ),
+      if (remoteScheme.isLightningFeesEnabled)
+        DrawerItemConfig(
+          "",
+          texts.home_drawer_item_title_payment_options,
+          remoteScheme.icLinkLightningFee,
+          onItemSelected: (_) => protectAdminRoute(
+            context,
+            user,
+            "/payment_options",
+          ),
+        ),
+      if (remoteScheme.isSettingsEnabled || remoteScheme.isDevelopersEnabled)
+      ..._drawerConfigAdvancedFlavorItems(context, user, texts, remoteScheme),
     ];
   }
 
@@ -358,7 +374,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     ClovrUserModel user,
     List<RefundableAddress> refundableAddresses,
   ) {
-    if (refundableAddresses.length == 0) {
+    if (refundableAddresses.isEmpty) {
       return [];
     }
     final texts = AppLocalizations.of(context);
@@ -408,9 +424,11 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     BuildContext context,
     ClovrUserModel user,
     AppLocalizations texts,
+    DrawerRemoteConfs colorScheme,
   ) {
     return [
-      DrawerItemConfigGroup([_drawerItemBalance(context, user, texts)]),
+      DrawerItemConfigGroup(
+          [_drawerItemBalance(context, user, texts, colorScheme)]),
     ];
   }
 
@@ -418,11 +436,12 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     BuildContext context,
     ClovrUserModel user,
     AppLocalizations texts,
+    DrawerRemoteConfs colorScheme,
   ) {
     return DrawerItemConfig(
       "",
       texts.home_drawer_item_title_balance,
-      "src/icon/balance.png",
+      colorScheme.icLinkBalance,
       isSelected: user.appMode == AppMode.balance,
       onItemSelected: (_) {
         protectAdminAction(
@@ -443,11 +462,12 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     BuildContext context,
     ClovrUserModel user,
     AppLocalizations texts,
+    DrawerRemoteConfs colorScheme,
   ) {
     return DrawerItemConfig(
       "",
       texts.home_drawer_item_title_pos,
-      "src/icon/pos.png",
+      colorScheme.icLinkPointSale,
       isSelected: user.appMode == AppMode.pos,
       onItemSelected: (_) {
         widget.userProfileBloc.userActionsSink.add(
@@ -485,36 +505,44 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     BuildContext context,
     ClovrUserModel user,
     AppLocalizations texts,
+    DrawerRemoteConfs configScheme,
   ) {
     if (user.appMode == AppMode.pos) {
-      return [
-        DrawerItemConfig(
-          "",
-          texts.home_drawer_item_title_pos_settings,
-          "src/icon/settings.png",
-          onItemSelected: (_) => protectAdminRoute(context, user, "/settings"),
-        ),
-      ];
+      if (configScheme.isSettingsEnabled) {
+        return [
+          DrawerItemConfig(
+            "",
+            texts.home_drawer_item_title_pos_settings,
+            configScheme.icPosSettings,
+            onItemSelected: (_) =>
+                protectAdminRoute(context, user, "/settings"),
+          ),
+        ];
+      } else {
+        return [];
+      }
     } else {
-      return [
-        DrawerItemConfig(
-          "/developers",
-          texts.home_drawer_item_title_developers,
-          "src/icon/developers.png",
-        ),
-      ];
+      if (configScheme.isDevelopersEnabled) {
+        return [
+          DrawerItemConfig(
+            "/developers",
+            texts.home_drawer_item_title_developers,
+            configScheme.icLinkDeveloper,
+          ),
+        ];
+      } else {
+        return [];
+      }
     }
   }
 
-  IconButton _buildMenuIcon(BuildContext context, AppMode appMode) {
-    final themeData = Theme.of(context);
-
+  IconButton _buildMenuIcon(
+      BuildContext context, AppMode appMode, String imageUrl) {
     return IconButton(
-      icon: Image.asset(
-        _getAppModesAssetName(appMode),
+      icon: CachedNetworkImage(
+        imageUrl: imageUrl,
         height: 24.0,
         width: 24.0,
-        color: themeData.appBarTheme.actionsIconTheme.color,
       ),
       onPressed: () {
         _scaffoldKey.currentState.openDrawer();

@@ -4,12 +4,16 @@ import 'package:clovrlabs_wallet/bloc/pos_catalog/actions.dart';
 import 'package:clovrlabs_wallet/bloc/pos_catalog/bloc.dart';
 import 'package:clovrlabs_wallet/routes/charge/sale_view.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/utils/date.dart';
 import 'package:clovrlabs_wallet/widgets/payment_details_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/route.dart';
+import 'package:clovrlabs_wallet/widgets/styles/main_screen_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
 import 'flip_transition.dart';
 import 'payment_item_avatar.dart';
 import 'success_avatar.dart';
@@ -37,7 +41,7 @@ class PaymentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-
+    final remoteScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
     return Padding(
       padding: const EdgeInsets.only(bottom: BOTTOM_PADDING, left: 8, right: 8),
       child: ClipRRect(
@@ -52,7 +56,7 @@ class PaymentItem extends StatelessWidget {
                   height: PAYMENT_LIST_ITEM_HEIGHT,
                   decoration: _createdWithin(Duration(seconds: 10))
                       ? BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.transparent,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
@@ -70,7 +74,9 @@ class PaymentItem extends StatelessWidget {
                   offset: Offset(-8, 0),
                   child: Text(
                     _title(context),
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                      color: remoteScheme.txtColorItemNameTransaction.toColor(),
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -87,7 +93,9 @@ class PaymentItem extends StatelessWidget {
                             _paymentInfo.creationTimestamp.toInt() * 1000,
                           ),
                         ),
-                        style: themeData.accentTextTheme.caption,
+                        style: themeData.accentTextTheme.caption.copyWith(
+                          color: remoteScheme.txtColorItemDate.toColor(),
+                        ),
                       ),
                       _pendingSuffix(context),
                     ],
@@ -102,8 +110,8 @@ class PaymentItem extends StatelessWidget {
                             : MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _paymentAmount(context),
-                      _paymentFee(context),
+                      _paymentAmount(context, remoteScheme),
+                      _paymentFee(context, remoteScheme),
                     ],
                   ),
                 ),
@@ -139,7 +147,8 @@ class PaymentItem extends StatelessWidget {
         : SizedBox();
   }
 
-  Widget _paymentAmount(BuildContext context) {
+  Widget _paymentAmount(
+      BuildContext context, MainScreenRemoteConfs remoteScheme) {
     final texts = AppLocalizations.of(context);
     final themeData = Theme.of(context);
 
@@ -158,11 +167,13 @@ class PaymentItem extends StatelessWidget {
           : negative
               ? texts.wallet_dashboard_payment_item_balance_negative(amount)
               : texts.wallet_dashboard_payment_item_balance_positive(amount),
-      style: themeData.accentTextTheme.headline6,
+      style: themeData.accentTextTheme.headline6.copyWith(
+        color: remoteScheme.txtColorAmountTransaction.toColor(),
+      ),
     );
   }
 
-  Widget _paymentFee(BuildContext context) {
+  Widget _paymentFee(BuildContext context, MainScreenRemoteConfs remoteScheme) {
     final texts = AppLocalizations.of(context);
     final themeData = Theme.of(context);
 
@@ -177,7 +188,9 @@ class PaymentItem extends StatelessWidget {
       _hideBalance
           ? texts.wallet_dashboard_payment_item_balance_hide
           : texts.wallet_dashboard_payment_item_balance_fee(feeFormatted),
-      style: themeData.accentTextTheme.caption,
+      style: themeData.accentTextTheme.caption.copyWith(
+        color: remoteScheme.txtColorItemFeeTransaction.toColor(),
+      ),
     );
   }
 

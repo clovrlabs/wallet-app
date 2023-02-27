@@ -135,8 +135,8 @@ class WithdrawFundsPageState extends State<WithdrawFundsPage> {
                   }
                   if (amount > widget.policy.maxValue) {
                     err = texts.withdraw_funds_error_max_value(
-                      acc.currency.format(widget.policy.maxValue + 1),
-                    );
+                        acc.currency.format(widget.policy.minValue),
+                        acc.currency.format(widget.policy.maxValue + 1));
                   }
                 }
                 return err;

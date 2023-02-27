@@ -13,6 +13,7 @@ import 'package:clovrlabs_wallet/bloc/lsp/lsp_bloc.dart';
 import 'package:clovrlabs_wallet/bloc/lsp/lsp_model.dart';
 import 'package:clovrlabs_wallet/routes/spontaneous_payment/spontaneous_payment_page.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/enter_payment_info_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/escher_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/lsp_fee.dart';
@@ -21,10 +22,13 @@ import 'package:clovrlabs_wallet/widgets/warning_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
+
 class BottomActionsBar extends StatelessWidget {
   final AccountModel account;
   final GlobalKey firstPaymentItemKey;
-
+  final colorScheme = locator.get<AppConfigScheme>().mainScreenRemoteConfigs;
   BottomActionsBar(this.account, this.firstPaymentItemKey);
 
   @override
@@ -33,10 +37,10 @@ class BottomActionsBar extends StatelessWidget {
     AutoSizeGroup actionsGroup = AutoSizeGroup();
 
     return BottomAppBar(
+
       child: Container(
         height: 60,
-        color: theme
-            .customData[theme.themeId].buttonAppBar,
+        color: colorScheme.colorBottomTab.toColor(),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,6 +49,7 @@ class BottomActionsBar extends StatelessWidget {
               onPress: () => _showSendOptions(context),
               group: actionsGroup,
               text: texts.bottom_action_bar_send,
+              textColor: colorScheme.txtColorBottomTabSend.toColor(),
               iconAssetPath: "src/icon/send-action.png",
             ),
             Container(
@@ -54,7 +59,9 @@ class BottomActionsBar extends StatelessWidget {
               onPress: () => showReceiveOptions(context, account),
               group: actionsGroup,
               text: texts.bottom_action_bar_receive,
+              textColor: colorScheme.txtColorBottomTabRecieve.toColor(),
               iconAssetPath: "src/icon/receive-action.png",
+
             ),
           ],
         ),
@@ -203,6 +210,7 @@ class _Action extends StatelessWidget {
   final String iconAssetPath;
   final Function() onPress;
   final Alignment minimizedAlignment;
+  final Color textColor;
 
   const _Action({
     Key key,
@@ -210,6 +218,7 @@ class _Action extends StatelessWidget {
     this.group,
     this.iconAssetPath,
     this.onPress,
+    this.textColor,
     this.minimizedAlignment = Alignment.center,
   }) : super(key: key);
 
@@ -225,6 +234,7 @@ class _Action extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: theme.bottomAppBarBtnStyle.copyWith(
+            color: textColor,
               fontSize: 13.5 / MediaQuery.of(context).textScaleFactor),
           maxLines: 1,
         ),

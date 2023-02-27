@@ -5,7 +5,7 @@ import 'package:clovrlabs_wallet/bloc/pos_catalog/bloc.dart';
 import 'package:clovrlabs_wallet/bloc/pos_catalog/model.dart';
 import 'package:clovrlabs_wallet/theme_data.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 

@@ -13,34 +13,31 @@ import 'package:clovrlabs_wallet/wallet_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'bloc/backup/backup_model.dart';
 import 'bloc/user_profile/user_profile_bloc.dart';
 
 void main() async {
-  // runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    BreezLogger();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    BreezDateUtils.setupLocales();
-    await Firebase.initializeApp();
-    SharedPreferences.getInstance().then((preferences) async {
-       await runMigration(preferences);
-      runApp(AppBlocsProvider(
-          child: WalletManager(), appBlocs: AppBlocs()));
-    });
-  // }, (error, stackTrace) async {
-  //   stackTrace.toString();
-  //   print(error.toString());
-  //   BreezBridge breezBridge = ServiceInjector().breezBridge;
-  //   if (error is! FlutterErrorDetails) {
-  //     breezBridge.log(
-  //         error.toString() + '\n' + stackTrace.toString(), "FlutterError");
-  //   }
-  // });
+  runZonedGuarded(() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  BreezLogger();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  BreezDateUtils.setupLocales();
+  await Firebase.initializeApp();
+  SharedPreferences.getInstance().then((preferences) async {
+    await runMigration(preferences);
+    runApp(AppBlocsProvider(appBlocs: AppBlocs(), child: WalletManager()));
+  });
+  }, (error, stackTrace) async {
+    stackTrace.toString();
+    print(error.toString());
+    BreezBridge breezBridge = ServiceInjector().breezBridge;
+    if (error is! FlutterErrorDetails) {
+      breezBridge.log(
+          error.toString() + '\n' + stackTrace.toString(), "FlutterError");
+    }
+  });
 }
 
 Future runMigration(SharedPreferences preferences) async {
