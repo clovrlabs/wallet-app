@@ -10,7 +10,6 @@ import 'package:clovrlabs_wallet/handlers/lnurl_handler.dart';
 import 'package:clovrlabs_wallet/routes/spontaneous_payment/spontaneous_payment_page.dart';
 import 'package:clovrlabs_wallet/routes/withdraw_funds/reverse_swap_page.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
-import 'package:clovrlabs_wallet/theme_data.dart' as theme;
 import 'package:clovrlabs_wallet/utils/bip21.dart';
 import 'package:clovrlabs_wallet/utils/btc_address.dart';
 import 'package:clovrlabs_wallet/utils/colors_ext.dart';
@@ -51,7 +50,6 @@ class QrActionButton extends StatelessWidget {
         width: 64,
         height: 64,
         child: FloatingActionButton(
-          // backgroundColor: colorScheme.backgroundColorQR.toColor(),
           onPressed: () async {
             final scannedString = await Navigator.pushNamed<String>(
               context,

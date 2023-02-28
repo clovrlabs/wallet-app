@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:clovrlabs_wallet/services/breezlib/breez_bridge.dart';
 import 'package:clovrlabs_wallet/services/breezlib/data/rpc.pb.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
-import 'package:clovrlabs_wallet/theme_data.dart' as theme;
 import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/animated_loader_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;

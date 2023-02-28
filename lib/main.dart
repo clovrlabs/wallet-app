@@ -10,6 +10,7 @@ import 'package:clovrlabs_wallet/bloc/backup/backup_bloc.dart';
 import 'package:clovrlabs_wallet/bloc/blocs_provider.dart';
 import 'package:clovrlabs_wallet/logger.dart';
 import 'package:clovrlabs_wallet/wallet_manager.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +26,8 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BreezDateUtils.setupLocales();
   await Firebase.initializeApp();
+  String token = await FirebaseMessaging.instance.getToken();
+
   SharedPreferences.getInstance().then((preferences) async {
     await runMigration(preferences);
     runApp(AppBlocsProvider(appBlocs: AppBlocs(), child: WalletManager()));
