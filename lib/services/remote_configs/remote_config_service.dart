@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import '../../app/locator.dart';
@@ -21,19 +20,13 @@ class RemoteConfigService {
       fetchTimeout: const Duration(seconds: 0),
       minimumFetchInterval: const Duration(minutes: 0),
     ));
-    // await remoteConfig.setDefaults(<String, String>{
-    //   'welcome': 'default welcome',
-    //   'hello': 'default hello',
-    // })
     await _remoteConfig.fetchAndActivate();
     await setupColorScheme(
       _remoteConfig.getString("main_screen"),
       _remoteConfig.getString("drawer_screen"),
-      _remoteConfig.getString("fiat_currency"),
+      _remoteConfig.getString("fiat_currency_screen"),
+      _remoteConfig.getString("network_screen"),
     );
-    // await print(_remoteConfig.getString("main_screen"));
-//    await _remoteConfig.fetchAndActivate();
-    // RemoteConfigValue([1], ValueSource.valueStatic);_
     return _remoteConfig;
   }
 

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:clovrlabs_wallet/services/breezlib/breez_bridge.dart';
 import 'package:clovrlabs_wallet/services/breezlib/data/rpc.pb.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
-import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/animated_loader_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
 import 'package:clovrlabs_wallet/widgets/error_dialog.dart';
@@ -12,6 +12,10 @@ import 'package:clovrlabs_wallet/widgets/loader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
+import '../../widgets/text_form_field_app.dart';
 
 class NetworkPage extends StatefulWidget {
   const NetworkPage({
@@ -51,19 +55,24 @@ class NetworkPageState extends State<NetworkPage> {
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
     final themeData = Theme.of(context);
-
+    final remoteConfigs = locator.get<AppConfigScheme>().networkRemoteConfs;
+    final back = backBtn.BackButton(
+      color: remoteConfigs.backArrowColor.toColor(),
+    );
     return ButtonTheme(
       height: 28.0,
       child: Scaffold(
+        backgroundColor: remoteConfigs.bgColor.toColor(),
         appBar: AppBar(
           iconTheme: themeData.appBarTheme.iconTheme,
           textTheme: themeData.appBarTheme.textTheme,
-          backgroundColor: themeData.canvasColor,
           automaticallyImplyLeading: false,
-          leading: backBtn.BackButton(),
+          leading: back,
           title: Text(
             texts.network_title,
-            // style: themeData.appBarTheme.textTheme.headline6,
+            style: TextStyle(
+              color: remoteConfigs.txtColorTitle.toColor(),
+            ),
           ),
           elevation: 0.0,
         ),
@@ -108,19 +117,39 @@ class NetworkPageState extends State<NetworkPage> {
                           children: [
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: Colors.white),
-                                primary: Colors.white,
+                                backgroundColor:
+                                    remoteConfigs.btBgResetColor.toColor(),
+                                side: BorderSide(
+                                  color:
+                                      remoteConfigs.btOutlineSaveColor.toColor(),
+                                ),
                               ),
-                              child: Text(texts.network_restart_action_reset),
+                              child: Text(
+                                texts.network_restart_action_reset,
+                                style: TextStyle(
+                                  color:
+                                      remoteConfigs.btTxtResetColor.toColor(),
+                                ),
+                              ),
                               onPressed: _resetNodes,
                             ),
                             SizedBox(width: 12.0),
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: Colors.white),
-                                primary: Colors.white,
+                                backgroundColor:
+                                    remoteConfigs.btBgSaveColor.toColor(),
+                                side: BorderSide(
+                                  color: remoteConfigs.btOutlineResetColor
+                                      .toColor(),
+                                ),
                               ),
-                              child: Text(texts.network_restart_action_save),
+                              child: Text(
+                                texts.network_restart_action_save,
+                                style: TextStyle(
+                                  color:
+                                      remoteConfigs.btTxtResetColor.toColor(),
+                                ),
+                              ),
                               onPressed: saveNodes,
                             ),
                           ],
@@ -241,8 +270,9 @@ class PeerWidget extends StatelessWidget {
   final TextEditingController peerController;
   final String label;
   final FormFieldValidator<String> validator;
+  final remoteConfigs = locator.get<AppConfigScheme>().networkRemoteConfs;
 
-  const PeerWidget({
+  PeerWidget({
     Key key,
     @required this.peerController,
     this.label,
@@ -251,17 +281,21 @@ class PeerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final texts = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.only(top: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label ?? texts.network_bitcoin_node,
-        ),
-        style: theme.FieldTextStyle.textStyle,
-        controller: peerController,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: TextFormFieldApp(
+        label: label,
+        peerController: peerController,
         validator: validator,
+        primaryColor: remoteConfigs.txtHintNode.toColor(),
+        hintColor: remoteConfigs.txtHintNode.toColor(),
+        indicatorColor: remoteConfigs.txtHintNode.toColor(),
+        highlightColor: remoteConfigs.txtHintNode.toColor(),
+        errorColor: remoteConfigs.txtHintNode.toColor(),
+        enabledBorder: remoteConfigs.txtHintNode.toColor(),
+        disabledBorder: remoteConfigs.txtHintNode.toColor(),
+        cursorColor: remoteConfigs.txtHintNode.toColor(),
+        txtColor: remoteConfigs.txtNode.toColor(),
       ),
     );
   }

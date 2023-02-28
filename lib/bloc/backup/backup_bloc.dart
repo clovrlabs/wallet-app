@@ -517,7 +517,7 @@ class BackupBloc {
       }
 
       if (request.encryptionKey != null && request.encryptionKey.key != null) {
-        assert(request.encryptionKey.key.isNotEmpty || true);
+        assert(request.encryptionKey.key.isNotEmpty);
       }
       assert(request.snapshot.nodeID.isNotEmpty);
 

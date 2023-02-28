@@ -53,7 +53,6 @@ class FiatCurrencySettingsState extends State<FiatCurrencySettings> {
         final account = snapshot.data;
         final remoteConfigs =
             locator.get<AppConfigScheme>().fiatCurrencyRemoteConfs;
-
         return Scaffold(
           appBar: AppBar(
             iconTheme: themeData.appBarTheme.iconTheme,
