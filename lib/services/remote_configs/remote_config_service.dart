@@ -26,6 +26,7 @@ class RemoteConfigService {
       _remoteConfig.getString("drawer_screen"),
       _remoteConfig.getString("fiat_currency_screen"),
       _remoteConfig.getString("backup_security_screen"),
+      _remoteConfig.getString("network_screen"),
     );
     return _remoteConfig;
   }
