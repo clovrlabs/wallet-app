@@ -20,18 +20,16 @@ import 'bloc/user_profile/user_profile_bloc.dart';
 
 void main() async {
   runZonedGuarded(() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  BreezLogger();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  BreezDateUtils.setupLocales();
-  await Firebase.initializeApp();
-  String token = await FirebaseMessaging.instance.getToken();
-
-  SharedPreferences.getInstance().then((preferences) async {
-    await runMigration(preferences);
-    runApp(AppBlocsProvider(appBlocs: AppBlocs(), child: WalletManager()));
-  });
+    WidgetsFlutterBinding.ensureInitialized();
+    BreezLogger();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    BreezDateUtils.setupLocales();
+    await Firebase.initializeApp();
+    SharedPreferences.getInstance().then((preferences) async {
+      await runMigration(preferences);
+      runApp(AppBlocsProvider(appBlocs: AppBlocs(), child: WalletManager()));
+    });
   }, (error, stackTrace) async {
     stackTrace.toString();
     print(error.toString());
