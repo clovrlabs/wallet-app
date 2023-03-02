@@ -5,6 +5,7 @@ import 'package:clovrlabs_wallet/widgets/styles/security_backup_screen.dart';
 import 'Network_remote_confs.dart';
 import 'drawer_screen_remote_confs.dart';
 import 'fiat_currency_remote_confs.dart';
+import 'lightning_fees_confs.dart';
 import 'main_screen_colors.dart';
 
 class AppConfigScheme {
@@ -15,6 +16,7 @@ class AppConfigScheme {
 
   SecurityBackupScreen get securityBackupScreen => _securityBackupScreen;
   NetworkRemoteConfs _networkRemoteConfs;
+  LightningFeesConfs _lightningFeesConfs;
 
   MainScreenRemoteConfs get mainScreenRemoteConfigs => _mainScreenRemoteConfigs;
 
@@ -25,12 +27,15 @@ class AppConfigScheme {
 
   NetworkRemoteConfs get networkRemoteConfs => _networkRemoteConfs;
 
+  LightningFeesConfs get lightningFeesConfs => _lightningFeesConfs;
+
   AppConfigScheme(
     String mainScreenConfs,
     String drawerItemConfig,
     String fiatCurrencyRemoteConfs,
     String securityBackupScreen,
     String networkRemoteConfs,
+    String lightningFeesScreen,
   ) {
     _mainScreenRemoteConfigs = MainScreenRemoteConfs.fromJson(
       json.decode(mainScreenConfs),
@@ -46,6 +51,9 @@ class AppConfigScheme {
     );
     _securityBackupScreen = SecurityBackupScreen.fromJson(
       json.decode(securityBackupScreen),
+    );
+    _lightningFeesConfs = LightningFeesConfs.fromJson(
+      json.decode(lightningFeesScreen),
     );
   }
 }

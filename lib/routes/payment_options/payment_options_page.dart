@@ -2,11 +2,17 @@ import 'package:clovrlabs_wallet/bloc/backup/backup_bloc.dart';
 import 'package:clovrlabs_wallet/bloc/blocs_provider.dart';
 import 'package:clovrlabs_wallet/bloc/payment_options/payment_options_actions.dart';
 import 'package:clovrlabs_wallet/bloc/payment_options/payment_options_bloc.dart';
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
+import 'package:clovrlabs_wallet/widgets/text_form_field_app.dart';
 import 'package:clovrlabs_wallet/widgets/warning_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
+import '../../widgets/styles/lightning_fees_confs.dart';
 
 class PaymentOptionsPage extends StatefulWidget {
   const PaymentOptionsPage({
@@ -69,44 +75,49 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
     final themeData = Theme.of(context);
+    final remoteConfigs = locator.get<AppConfigScheme>().lightningFeesConfs;
 
     return Scaffold(
+      backgroundColor: remoteConfigs.bgColor.toColor(),
       appBar: AppBar(
         iconTheme: themeData.appBarTheme.iconTheme,
         textTheme: themeData.appBarTheme.textTheme,
-        backgroundColor: themeData.canvasColor,
+        backgroundColor: remoteConfigs.bgColor.toColor(),
         automaticallyImplyLeading: false,
-        leading: backBtn.BackButton(),
+        leading: backBtn.BackButton(
+          color: remoteConfigs.backArrowColor.toColor(),
+        ),
         title: Text(
           texts.payment_options_title,
-          // style: themeData.appBarTheme.textTheme.headline6,
+          style: TextStyle(
+            color: remoteConfigs.txtColorTitle.toColor(),
+          ),
         ),
         elevation: 0.0,
       ),
       body: (_loadingOverride || _loadingBaseFee || _loadingProportionalFee)
           ? Container()
-          : _body(context),
+          : _body(context, remoteConfigs),
     );
   }
 
-  Widget _body(BuildContext context) {
+  Widget _body(BuildContext context, LightningFeesConfs remoteConfigs) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _headerFee(context),
-          _overrideFee(context),
-          _baseFeeWidget(context),
-          _proportionalFeeWidget(context),
-          _actionsFee(context),
-          _warningBox(context),
+          _headerFee(context, remoteConfigs),
+          _overrideFee(context, remoteConfigs),
+          _baseFeeWidget(context, remoteConfigs),
+          _proportionalFeeWidget(context, remoteConfigs),
+          _actionsFee(context, remoteConfigs),
+          _warningBox(context, remoteConfigs),
         ],
       ),
     );
   }
 
-  Widget _headerFee(BuildContext context) {
+  Widget _headerFee(BuildContext context, LightningFeesConfs remoteConfigs) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
 
     return Row(
       children: [
@@ -115,8 +126,8 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
             padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
             child: Text(
               texts.payment_options_fee_header,
-              style: themeData.primaryTextTheme.headline3.copyWith(
-                color: Colors.white,
+              style: TextStyle(
+                color: remoteConfigs.txtSubtitleFees.toColor(),
               ),
             ),
           ),
@@ -125,26 +136,32 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     );
   }
 
-  Widget _overrideFee(BuildContext context) {
+  Widget _overrideFee(BuildContext context, LightningFeesConfs remoteConfigs) {
     final texts = AppLocalizations.of(context);
-    final themeData = Theme.of(context);
 
-    return CheckboxListTile(
-      activeColor: Colors.white,
-      checkColor: themeData.canvasColor,
-      controlAffinity: ListTileControlAffinity.leading,
-      value: _overriding,
-      onChanged: (value) => setState(() => _overriding = value),
-      title: Text(
-        texts.payment_options_fee_override_enable,
-        style: themeData.primaryTextTheme.headline3.copyWith(
-          color: Colors.white,
+    return Theme(
+      data: ThemeData(
+        unselectedWidgetColor: remoteConfigs.txtEnforceFees.toColor(),
+        primaryColor: remoteConfigs.txtEnforceFees.toColor(),
+      ),
+      child: CheckboxListTile(
+        activeColor: remoteConfigs.checkBoxFees.toColor(),
+        checkColor: remoteConfigs.bgColor.toColor(),
+        controlAffinity: ListTileControlAffinity.leading,
+        value: _overriding,
+        onChanged: (value) => setState(() => _overriding = value),
+        title: Text(
+          texts.payment_options_fee_override_enable,
+          style: TextStyle(
+            color: remoteConfigs.txtEnforceFees.toColor(),
+          ),
         ),
       ),
     );
   }
 
-  Widget _baseFeeWidget(BuildContext context) {
+  Widget _baseFeeWidget(
+      BuildContext context, LightningFeesConfs remoteConfigs) {
     final texts = AppLocalizations.of(context);
 
     return Row(
@@ -153,17 +170,13 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
             child: Form(
-              child: TextFormField(
+              child: TextFormFieldApp(
                 enabled: _overriding,
                 keyboardType: TextInputType.numberWithOptions(decimal: false),
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
-                controller: _baseFeeController,
-                decoration: InputDecoration(
-                  labelText: texts.payment_options_base_fee_label,
-                  border: UnderlineInputBorder(),
-                ),
+                peerController: _baseFeeController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return texts.payment_options_base_fee_label;
@@ -179,6 +192,16 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
                   return null;
                 },
                 onChanged: (value) => _saveBase(context, value),
+                label: texts.payment_options_proportional_fee_label,
+                primaryColor: remoteConfigs.txtHintBaseFee.toColor(),
+                hintColor: remoteConfigs.txtHintBaseFee.toColor(),
+                indicatorColor: remoteConfigs.txtHintBaseFee.toColor(),
+                highlightColor: remoteConfigs.txtHintBaseFee.toColor(),
+                txtColor: remoteConfigs.txtBaseFee.toColor(),
+                errorColor: remoteConfigs.txtHintBaseFee.toColor(),
+                enabledBorder: remoteConfigs.txtHintBaseFee.toColor(),
+                disabledBorder: remoteConfigs.txtHintBaseFee.toColor(),
+                cursorColor: remoteConfigs.txtHintBaseFee.toColor(),
               ),
             ),
           ),
@@ -187,7 +210,8 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     );
   }
 
-  Widget _proportionalFeeWidget(BuildContext context) {
+  Widget _proportionalFeeWidget(
+      BuildContext context, LightningFeesConfs remoteConfigs) {
     final texts = AppLocalizations.of(context);
 
     return Row(
@@ -196,17 +220,13 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Form(
-              child: TextFormField(
+              child: TextFormFieldApp(
                 enabled: _overriding,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                 ],
-                controller: _proportionalFeeController,
-                decoration: InputDecoration(
-                  labelText: texts.payment_options_proportional_fee_label,
-                  border: UnderlineInputBorder(),
-                ),
+                peerController: _proportionalFeeController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return texts.payment_options_proportional_fee_label;
@@ -222,6 +242,16 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
                   return null;
                 },
                 onChanged: (value) => _saveProportional(context, value),
+                label: texts.payment_options_proportional_fee_label,
+                primaryColor: remoteConfigs.txtHintProportionalFee.toColor(),
+                hintColor: remoteConfigs.txtHintProportionalFee.toColor(),
+                indicatorColor: remoteConfigs.txtHintProportionalFee.toColor(),
+                highlightColor: remoteConfigs.txtHintProportionalFee.toColor(),
+                txtColor: remoteConfigs.txtProportionalFee.toColor(),
+                errorColor: remoteConfigs.txtHintProportionalFee.toColor(),
+                enabledBorder: remoteConfigs.txtHintProportionalFee.toColor(),
+                disabledBorder: remoteConfigs.txtHintProportionalFee.toColor(),
+                cursorColor: remoteConfigs.txtHintProportionalFee.toColor(),
               ),
             ),
           ),
@@ -230,7 +260,7 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     );
   }
 
-  Widget _actionsFee(BuildContext context) {
+  Widget _actionsFee(BuildContext context, LightningFeesConfs remoteConfigs) {
     final texts = AppLocalizations.of(context);
 
     return Padding(
@@ -240,22 +270,32 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
         children: [
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.white),
-              primary: Colors.white,
+              side: BorderSide(
+                color: remoteConfigs.btOutlineResetColor.toColor(),
+              ),
+              backgroundColor: remoteConfigs.btBgResetColor.toColor(),
             ),
             child: Text(
               texts.payment_options_fee_action_reset,
+              style: TextStyle(
+                color: remoteConfigs.btTxtResetColor.toColor(),
+              ),
             ),
             onPressed: () => _reset(context),
           ),
           SizedBox(width: 12.0),
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.white),
-              primary: Colors.white,
+              side: BorderSide(
+                color: remoteConfigs.btOutlineResetColor.toColor(),
+              ),
+              backgroundColor: remoteConfigs.btBgResetColor.toColor(),
             ),
             child: Text(
               texts.payment_options_fee_action_save,
+              style: TextStyle(
+                color: remoteConfigs.btTxtResetColor.toColor(),
+              ),
             ),
             onPressed: () {
               if (_overriding) {
@@ -308,15 +348,19 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     );
   }
 
-  Widget _warningBox(BuildContext context) {
+  Widget _warningBox(BuildContext context, LightningFeesConfs remoteConfigs) {
     final texts = AppLocalizations.of(context);
     return WarningBox(
+      backgroundColor: remoteConfigs.colorBgBanner.toColor(),
+      borderColor: remoteConfigs.colorFrameBanner.toColor(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             texts.payment_options_fee_warning,
-            style: Theme.of(context).textTheme.headline6,
+            style: TextStyle(
+              color: remoteConfigs.txtColorBanner.toColor(),
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -324,8 +368,7 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     );
   }
 
-  void _saveProportional(BuildContext context,
-      String value) {
+  void _saveProportional(BuildContext context, String value) {
     double newProportionalFee = 0.0;
     try {
       newProportionalFee = double.parse(value);
@@ -337,8 +380,7 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     });
   }
 
-  void _saveBase(BuildContext context,
-      String value) {
+  void _saveBase(BuildContext context, String value) {
     int newBaseFee = 0;
     try {
       newBaseFee = int.parse(value);
