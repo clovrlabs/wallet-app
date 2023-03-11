@@ -156,7 +156,7 @@ class _PosPaymentDialogState extends State<PosPaymentDialog> {
               highlightColor: Colors.transparent,
               padding: const EdgeInsets.fromLTRB(2.0, 8.0, 14.0, 8.0),
               icon: Icon(
-                IconData(0xe90b, fontFamily: 'icomoon'),
+                const IconData(0xe90b, fontFamily: 'icomoon'),
               ),
               color: themeData.primaryTextTheme.button.color,
               tooltip: texts.pos_dialog_invoice_copy,

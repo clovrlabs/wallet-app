@@ -49,6 +49,7 @@ final routeObserver = RouteObserver();
 class WalletManager extends StatelessWidget {
   var _navigatorKey = GlobalKey<NavigatorState>();
   var _homeNavigatorKey = GlobalKey<NavigatorState>();
+  static bool isShowedToast = false;
 
   WalletManager() {}
 
@@ -192,7 +193,8 @@ class WalletManager extends StatelessWidget {
                               );
                             case '/deposit_btc_address':
                               return FadeInRoute(
-                                builder: (_) => DepositToBTCAddressPage(),
+                                builder: (_) =>
+                                    DepositToBTCAddressPage(userProfileBloc),
                                 settings: settings,
                               );
                             case '/buy_bitcoin':

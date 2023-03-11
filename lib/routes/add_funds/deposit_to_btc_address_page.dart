@@ -5,6 +5,7 @@ import 'package:clovrlabs_wallet/bloc/account/add_funds_model.dart';
 import 'package:clovrlabs_wallet/bloc/blocs_provider.dart';
 import 'package:clovrlabs_wallet/bloc/lsp/lsp_bloc.dart';
 import 'package:clovrlabs_wallet/bloc/lsp/lsp_model.dart';
+import 'package:clovrlabs_wallet/bloc/user_profile/user_profile_bloc.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
 import 'package:clovrlabs_wallet/widgets/single_button_bottom_bar.dart';
 import 'package:clovrlabs_wallet/widgets/warning_box.dart';
@@ -12,11 +13,14 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../wallet_manager.dart';
 import 'address_widget.dart';
 import 'conditional_deposit.dart';
 
 class DepositToBTCAddressPage extends StatefulWidget {
-  const DepositToBTCAddressPage();
+  final UserProfileBloc userProfileBloc;
+
+  const DepositToBTCAddressPage(this.userProfileBloc);
 
   @override
   State<StatefulWidget> createState() {
@@ -41,7 +45,7 @@ class DepositToBTCAddressPageState extends State<DepositToBTCAddressPage> {
   Widget build(BuildContext context) {
     final texts = AppLocalizations.of(context);
     final themeData = Theme.of(context);
-
+    WalletManager.isShowedToast = false;
     final accountBloc = AppBlocsProvider.of<AccountBloc>(context);
     final lspBloc = AppBlocsProvider.of<LSPBloc>(context);
 
@@ -65,7 +69,6 @@ class DepositToBTCAddressPageState extends State<DepositToBTCAddressPage> {
                         leading: backBtn.BackButton(),
                         title: Text(
                           texts.invoice_btc_address_title,
-                          // style: themeData.appBarTheme.textTheme.headline6,
                         ),
                         elevation: 0.0,
                       ),
@@ -134,7 +137,8 @@ class DepositToBTCAddressPageState extends State<DepositToBTCAddressPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AddressWidget(response?.address, response?.backupJson),
+          AddressWidget(response?.address, response?.backupJson,
+              widget.userProfileBloc),
           response == null || lspInfo == null
               ? SizedBox()
               : WarningBox(

@@ -48,13 +48,13 @@ class DrawerItemConfigGroup {
   });
 }
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawerClovrApp extends StatelessWidget {
   final bool _avatar;
   final List<DrawerItemConfigGroup> _drawerGroupedItems;
   final void Function(String screenName) _onItemSelected;
   final _scrollController = ScrollController();
 
-  NavigationDrawer(
+  NavigationDrawerClovrApp(
     this._avatar,
     this._drawerGroupedItems,
     this._onItemSelected,

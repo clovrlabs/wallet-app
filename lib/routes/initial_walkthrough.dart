@@ -24,6 +24,7 @@ import 'package:flutter_animate/extensions/extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hex/hex.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../theme_data.dart';
@@ -278,9 +279,39 @@ class InitialWalkthroughPageState extends State<InitialWalkthroughPage>
   }
 
   void _proceedToRegister() {
+   _requestAndroidPermission(context);
     widget._registrationBloc.registerSink.add(null);
-    _registered = true;
     Navigator.of(context).pop();
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('The notification permission is necessary for the application'),
+      ),
+    );
+  }
+
+  void _requestAndroidPermission(BuildContext context) async {
+    if (Platform.isAndroid) {
+      final result = await Permission.notification.request();
+      if(result.isPermanentlyDenied){
+        openAppSettings();
+        return;
+      }
+      if (result.isDenied) {
+        _showToast(context);
+      } else {
+        widget._registrationBloc.registerSink.add(null);
+        _registered = true;
+        Navigator.of(context).pop();
+      }
+    }else{
+      widget._registrationBloc.registerSink.add(null);
+      _registered = true;
+      Navigator.of(context).pop();
+    }
   }
 
   Future<bool> _onWillPop() async {

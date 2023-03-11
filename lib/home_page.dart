@@ -81,8 +81,6 @@ class Home extends StatefulWidget {
     DrawerItemConfig("ClovrLabs", "ClovrLabs", ""),
   ]);
 
-  final Map<String, Widget> _screenBuilders = {};
-
   @override
   State<StatefulWidget> createState() {
     return HomeState();
@@ -154,6 +152,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     return WillPopScope(
       onWillPop: willPopCallback(
         context,
+
         canCancel: () => _scaffoldKey.currentState?.isDrawerOpen ?? false,
       ),
       child: StreamBuilder<ClovrUserModel>(
@@ -287,7 +286,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     );
   }
 
-  NavigationDrawer _navigationDrawer(
+  NavigationDrawerClovrApp _navigationDrawer(
     BuildContext context,
     ClovrUserModel user,
     AccountModel account,
@@ -296,7 +295,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
     List<AddFundVendorModel> vendor,
     AppLocalizations texts,
   ) {
-    return NavigationDrawer(
+    return NavigationDrawerClovrApp(
       true,
       [
         // Comment temporary

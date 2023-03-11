@@ -6,7 +6,7 @@ import 'package:clovrlabs_wallet/routes/charge/sale_view.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
 import 'package:clovrlabs_wallet/widgets/breez_dropdown.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'hide Badge;
 
 class PosInvoiceCartBar extends StatefulWidget {
   final GlobalKey badgeKey;

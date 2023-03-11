@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:clovrlabs_wallet/bloc/user_profile/user_profile_bloc.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
 import 'package:clovrlabs_wallet/widgets/compact_qr_image.dart';
@@ -5,15 +8,20 @@ import 'package:clovrlabs_wallet/widgets/flushbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_extend/share_extend.dart';
+
+import '../../wallet_manager.dart';
 
 class AddressWidget extends StatelessWidget {
   final String address;
   final String backupJson;
+  final UserProfileBloc userProfileBloc;
 
   AddressWidget(
     this.address,
     this.backupJson,
+    this.userProfileBloc,
   );
 
   @override
@@ -42,7 +50,7 @@ class AddressWidget extends StatelessWidget {
           ),
         ),
         address == null
-            ? _buildQRPlaceholder()
+            ? _buildQRPlaceholder(context)
             : Column(
                 children: [
                   GestureDetector(
@@ -79,7 +87,33 @@ class AddressWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildQRPlaceholder() {
+  void _requestAndroidPermission(BuildContext context) async {
+    if (Platform.isAndroid &&
+        await Permission.notification.status.isDenied &&
+        !WalletManager.isShowedToast) {
+      final result = await Permission.notification.request();
+      if (result.isPermanentlyDenied || result.isDenied) {
+        _showToast(context);
+      }
+    }
+    userProfileBloc.registerSink.add(null);
+  }
+
+  void _showToast(BuildContext context) {
+    if (WalletManager.isShowedToast) return;
+    WalletManager.isShowedToast = true;
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+          behavior: SnackBarBehavior.floating,
+        content: const Text(
+            'The notification permission is necessary for the application'),
+      ),
+    );
+  }
+
+  Widget _buildQRPlaceholder(BuildContext context) {
+    _requestAndroidPermission(context);
     return Container(
       width: 188.6,
       height: 188.6,
@@ -87,7 +121,10 @@ class AddressWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.6),
       child: Padding(
         padding: const EdgeInsets.all(32.0),
-        child: CircularProgressIndicator(),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
