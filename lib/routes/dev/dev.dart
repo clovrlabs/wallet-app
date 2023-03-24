@@ -15,13 +15,18 @@ import 'package:clovrlabs_wallet/services/breezlib/breez_bridge.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
 import 'package:clovrlabs_wallet/services/permissions.dart';
 import 'package:clovrlabs_wallet/theme_data.dart' as theme;
+import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
 import 'package:clovrlabs_wallet/widgets/error_dialog.dart';
 import 'package:clovrlabs_wallet/widgets/loader.dart';
+import 'package:clovrlabs_wallet/widgets/styles/dev_screen_remote_confs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
+import '../../app/locator.dart';
+import '../../widgets/styles/app_color_scheme.dart';
+import '../../widgets/text_form_field_app.dart';
 import 'default_commands.dart';
 
 bool allowRebroadcastRefunds = false;
@@ -98,21 +103,30 @@ class DevViewState extends State<DevView> {
     });
   }
 
-  Widget _renderBody() {
+  Widget _renderBody(DevScreenRemoteConfs remoteConfigs) {
     if (_showDefaultCommands) {
       return Theme(
           data: Theme.of(context).copyWith(
             dividerColor: Colors.transparent,
           ),
-          child: ListView(children: defaultCliCommandsText((command) {
-            _cliInputController.text = command + " ";
-            FocusScope.of(_scaffoldKey.currentState.context)
-                .requestFocus(_cliEntryFocusNode);
-          })));
+          child: ListView(
+              children: defaultCliCommandsText(
+            (command) {
+              _cliInputController.text = command + " ";
+              FocusScope.of(_scaffoldKey.currentState.context)
+                  .requestFocus(_cliEntryFocusNode);
+            },
+            remoteConfigs.txtItemColor.toColor(),
+          )));
     }
     return ListView(
       children: [
-        RichText(text: TextSpan(style: _cliTextStyle, children: _richCliText))
+        RichText(
+            text: TextSpan(
+                style: _cliTextStyle.copyWith(
+                  color: remoteConfigs.txtItemColor.toColor(),
+                ),
+                children: _richCliText))
       ],
     );
   }
@@ -123,6 +137,8 @@ class DevViewState extends State<DevView> {
     BackupBloc backupBloc = AppBlocsProvider.of<BackupBloc>(context);
     AddFundsBloc addFundsBloc = BlocProvider.of<AddFundsBloc>(context);
     UserProfileBloc userBloc = AppBlocsProvider.of<UserProfileBloc>(context);
+    final remoteConfigs = locator.get<AppConfigScheme>().devScreenRemoteConfs;
+
     return StreamBuilder<BackupState>(
       stream: backupBloc.backupStateStream,
       builder: (ctx, backupSnapshot) => StreamBuilder(
@@ -144,17 +160,21 @@ class DevViewState extends State<DevView> {
                                   iconTheme:
                                       Theme.of(context).appBarTheme.iconTheme,
                                   backgroundColor:
-                                      Theme.of(context).canvasColor,
-                                  leading: backBtn.BackButton(),
+                                      remoteConfigs.bgColor.toColor(),
+                                  leading: backBtn.BackButton(
+                                    color:
+                                        remoteConfigs.backArrowColor.toColor(),
+                                  ),
                                   elevation: 0.0,
                                   actions: <Widget>[
                                     PopupMenuButton<Choice>(
                                       onSelected: widget._select,
-                                      color: Theme.of(context).backgroundColor,
+                                      color: remoteConfigs.colorContextMenu
+                                          .toColor(),
                                       icon: Icon(
                                         Icons.more_vert,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
+                                        color: remoteConfigs.colorContextMenu
+                                            .toColor(),
                                       ),
                                       itemBuilder: (BuildContext context) {
                                         return getChoices(
@@ -185,6 +205,8 @@ class DevViewState extends State<DevView> {
                                     //     .,
                                   ),
                                 ),
+                                backgroundColor:
+                                    remoteConfigs.bgColor.toColor(),
                                 body: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -196,25 +218,58 @@ class DevViewState extends State<DevView> {
                                         child: Row(
                                           children: <Widget>[
                                             Flexible(
-                                                child: TextField(
+                                                child: TextFormFieldApp(
                                               focusNode: _cliEntryFocusNode,
-                                              controller: _cliInputController,
-                                              decoration: InputDecoration(
-                                                  hintText:
-                                                      'Enter a command or use the links below'),
-                                              onSubmitted: (command) {
+                                              peerController:
+                                                  _cliInputController,
+                                              highlightColor: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
+                                              hintColor: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
+                                              label:
+                                                  'Enter a command or use the links below',
+                                              onChanged: (command) {
                                                 _sendCommand(command);
                                               },
+                                              indicatorColor: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
+                                              primaryColor: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
+                                              errorColor: remoteConfigs
+                                                  .txtErrorColor
+                                                  .toColor(),
+                                              enabledBorder: remoteConfigs
+                                                  .editTxt
+                                                  .toColor(),
+                                              disabledBorder: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
+                                              cursorColor: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
+                                              txtColor: remoteConfigs
+                                                  .editTxtHint
+                                                  .toColor(),
                                             )),
                                             IconButton(
+                                              color: remoteConfigs
+                                                  .btExecuteColor
+                                                  .toColor(),
                                               icon: Icon(Icons.play_arrow),
                                               tooltip: 'Run',
                                               onPressed: () {
                                                 _sendCommand(
-                                                    _cliInputController.text);
+                                                  _cliInputController.text,
+                                                );
                                               },
                                             ),
                                             IconButton(
+                                              color: remoteConfigs.btCloseColor
+                                                  .toColor(),
                                               icon: Icon(Icons.clear),
                                               tooltip: 'Clear',
                                               onPressed: () {
@@ -241,12 +296,15 @@ class DevViewState extends State<DevView> {
                                                   ? EdgeInsets.all(0.0)
                                                   : EdgeInsets.all(2.0),
                                               decoration: BoxDecoration(
-                                                  border: _showDefaultCommands
-                                                      ? null
-                                                      : Border.all(
-                                                          width: 1.0,
-                                                          color: Color(
-                                                              0x80FFFFFF))),
+                                                border: _showDefaultCommands
+                                                    ? null
+                                                    : Border.all(
+                                                        width: 1.0,
+                                                        color: remoteConfigs
+                                                            .bgColor
+                                                            .toColor(),
+                                                      ),
+                                              ),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 crossAxisAlignment:
@@ -280,8 +338,9 @@ class DevViewState extends State<DevView> {
                                                                         .snackBarStyle,
                                                                   ),
                                                                   backgroundColor:
-                                                                      theme
-                                                                          .snackBarBackgroundColor,
+                                                                      remoteConfigs
+                                                                          .bgColor
+                                                                          .toColor(),
                                                                   duration:
                                                                       Duration(
                                                                           seconds:
@@ -304,7 +363,9 @@ class DevViewState extends State<DevView> {
                                                             )
                                                           ],
                                                         ),
-                                                  Expanded(child: _renderBody())
+                                                  Expanded(
+                                                      child: _renderBody(
+                                                          remoteConfigs))
                                                 ],
                                               ),
                                             ),
@@ -376,7 +437,8 @@ class DevViewState extends State<DevView> {
           function: () {
             _resetBugReportBehavior(accBloc, settings);
           }));
-    };
+    }
+    ;
     // choices.add(Choice(
     //     title:
     //         "${addFundsSettings.moonpayIpCheck ? "Disable" : "Enable"} MoonPay IP Check",
@@ -610,7 +672,7 @@ class DevViewState extends State<DevView> {
     });
   }
 
-  void _downloadGraph() async{
+  void _downloadGraph() async {
     await widget._breezBridge.syncGraphIfNeeded().whenComplete(() {
       log.info("download complete");
     });

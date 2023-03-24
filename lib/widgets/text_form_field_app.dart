@@ -19,10 +19,11 @@ class TextFormFieldApp extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter> inputFormatters;
   final ValueChanged<String> onChanged;
+  final FocusNode focusNode;
 
   const TextFormFieldApp({
     Key key,
-    @required this.validator,
+    this.validator,
     @required this.peerController,
     @required this.label,
     @required this.primaryColor,
@@ -38,6 +39,7 @@ class TextFormFieldApp extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.onChanged,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class TextFormFieldApp extends StatelessWidget {
         highlightColor: highlightColor,
         inputDecorationTheme: InputDecorationTheme(
           labelStyle: TextStyle(
-            color: errorColor,
+            color: primaryColor,
           ),
           errorStyle: TextStyle(
             color: errorColor,
@@ -66,6 +68,7 @@ class TextFormFieldApp extends StatelessWidget {
         inputFormatters: inputFormatters,
         enabled: enabled,
         cursorColor: cursorColor,
+        focusNode: focusNode,
         decoration: InputDecoration(
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(

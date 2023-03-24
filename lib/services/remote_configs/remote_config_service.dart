@@ -28,6 +28,7 @@ class RemoteConfigService {
       _remoteConfig.getString("backup_security_screen"),
       _remoteConfig.getString("network_screen"),
       _remoteConfig.getString("lightning_fees_screen"),
+      _remoteConfig.getString("developer_screen"),
     );
     return _remoteConfig;
   }

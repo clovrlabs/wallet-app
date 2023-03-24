@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clovrlabs_wallet/widgets/styles/dev_screen_remote_confs.dart';
 import 'package:clovrlabs_wallet/widgets/styles/security_backup_screen.dart';
 
 import 'Network_remote_confs.dart';
@@ -13,6 +14,7 @@ class AppConfigScheme {
   DrawerRemoteConfs _drawerItemConfig;
   FiatCurrencyRemoteConfs _fiatCurrencyRemoteConfs;
   SecurityBackupScreen _securityBackupScreen;
+  DevScreenRemoteConfs _devScreenRemoteConfs;
 
   SecurityBackupScreen get securityBackupScreen => _securityBackupScreen;
   NetworkRemoteConfs _networkRemoteConfs;
@@ -27,6 +29,12 @@ class AppConfigScheme {
 
   NetworkRemoteConfs get networkRemoteConfs => _networkRemoteConfs;
 
+  DevScreenRemoteConfs get devScreenRemoteConfs => _devScreenRemoteConfs;
+
+  set devScreenRemoteConfs(DevScreenRemoteConfs value) {
+    _devScreenRemoteConfs = value;
+  }
+
   LightningFeesConfs get lightningFeesConfs => _lightningFeesConfs;
 
   AppConfigScheme(
@@ -36,6 +44,7 @@ class AppConfigScheme {
     String securityBackupScreen,
     String networkRemoteConfs,
     String lightningFeesScreen,
+    String devRemoteConfs,
   ) {
     _mainScreenRemoteConfigs = MainScreenRemoteConfs.fromJson(
       json.decode(mainScreenConfs),
@@ -51,6 +60,9 @@ class AppConfigScheme {
     );
     _securityBackupScreen = SecurityBackupScreen.fromJson(
       json.decode(securityBackupScreen),
+    );
+    _devScreenRemoteConfs = DevScreenRemoteConfs.fromJson(
+      json.decode(devRemoteConfs),
     );
     _lightningFeesConfs = LightningFeesConfs.fromJson(
       json.decode(lightningFeesScreen),
