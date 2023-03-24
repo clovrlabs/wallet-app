@@ -11,7 +11,7 @@ import Foundation
 class Notifier : NSObject {
     
     static var notificationCenter : UNUserNotificationCenter?;
-    static let openClovrLabsWalletAction = UNNotificationAction(identifier: "openClovrLabsAction", title: "Open ClovrLabs Wallet", options: [.foreground])
+    static let openClovrLabsWalletAction = UNNotificationAction(identifier: "openClovrLabsAction", title: "Open Clovr Labs Wallet", options: [.foreground])
     static let openClovrLabsCategory = UNNotificationCategory(identifier: "openClovrLabs", actions: [openClovrLabsWalletAction], intentIdentifiers: [], options: [])
     
     static func getNotificationCenter() -> UNUserNotificationCenter{

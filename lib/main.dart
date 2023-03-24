@@ -13,7 +13,6 @@ import 'package:clovrlabs_wallet/wallet_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc/backup/backup_model.dart';
