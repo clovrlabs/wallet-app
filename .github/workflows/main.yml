@@ -28,4 +28,3 @@ jobs:
         run: flutter build ios --release --no-codesign
       - name: Execute Fastlane command
         run: cd ios && fastlane release type:github
-        timeout-minutes: 40
