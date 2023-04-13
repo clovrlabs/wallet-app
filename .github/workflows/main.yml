@@ -1,83 +1,23 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
-
-# Controls when the action will run. 
-on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+name: github-actions
+  on:
   push:
-    branches: [ master,anytime_integration_new ]
-  pull_request:
-    branches: [ master,anytime_integration_new ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: macOS-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}       
-
-      - name: add key
-        env:
-          CER_KEY_PASS: ${{ secrets.CER_KEY_PASS }}
-        run: ./.github/scripts/add-key.sh
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          curl -o golang https://dl.google.com/go/go1.19.2.darwin-amd64.tar.gz
-          mkdir go1.19.2
-          tar -C $(pwd)/go1.19.2 -xzf golang
-          export PATH=$(pwd)/go1.19.2/go/bin:$PATH
-          export GOROOT=$(pwd)/go1.19.2/go
-          go version
-          brew update
-          brew install bazaar
-          git clone --branch lnd-merge-0.15.1 https://github.com/breez/breez.git gopath/src/github.com/breez/breez
-          export TMP_GOPATH=$(pwd)/gopath
-          pushd gopath/src/github.com/breez/breez
-          export GOPRIVATE=github.com/btcsuite/btcd
-          export GOPATH=$TMP_GOPATH
-          echo "gopath= $GOPATH"
-          go install golang.org/x/mobile/cmd/gomobile@latest
-          echo "gomobile was installed!"          
-          go install golang.org/x/mobile/cmd/gobind@latest
-          echo "gobind was installed!"           
-          echo $(ls $GOPATH/bin)
-          export PATH=$GOPATH/bin:$PATH          
-          mkdir -p build/ios          
-          PATH=$PATH:$GOPATH/bin gomobile bind -iosversion=12.4 -target=ios -tags="ios experimental signrpc walletrpc chainrpc invoicesrpc routerrpc backuprpc peerrpc submarineswaprpc breezbackuprpc" -o build/ios/bindings.xcframework -ldflags="-s -w" github.com/breez/breez/bindings
-          popd
-          brew install ideviceinstaller ios-deploy
-          git clone --branch stable https://github.com/flutter/flutter.git
-          cp -r $GOPATH/src/github.com/breez/breez/build/ios/bindings.xcframework/ios-arm64/Bindings.framework $GITHUB_WORKSPACE/ios/bindings.framework
-          rm -rf $GITHUB_WORKSPACE/conf
-          git clone builderfiles@packages.breez.technology:configuration -b production $GITHUB_WORKSPACE/temp_config          
-          cp -r $GITHUB_WORKSPACE/temp_config/conf $GITHUB_WORKSPACE/conf
-          echo "ls conf ***"
-          ls $GITHUB_WORKSPACE/conf
-          cat $GITHUB_WORKSPACE/conf/breez.conf
-          sftp builderfiles@packages.breez.technology:config/conf/GoogleService-Info.plist $GITHUB_WORKSPACE/ios/Runner/GoogleService-Info.plist
-          ./flutter/bin/flutter clean
-          ./flutter/bin/flutter build ios --no-codesign --no-tree-shake-icons
-
-      - name: deploy
-        env:
-          GOOGLE_SIGN_IN_URL: ${{ secrets.GOOGLE_SIGN_IN_URL }}
-          APP_USERNAME: ${{ secrets.APP_USERNAME }}
-          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
-        run: ./.github/scripts/sign.sh
+  branches:
+  - feature/app_without_rc
+  jobs:
+    check-bats-version:
+    runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v2 #plugin for setting up the java
+    with:
+  distribution: ‘zulu’
+  java-version: ‘11’ #defines the java version
+                - uses: subosito/flutter-action@v2
+    with:
+  flutter-version: ‘2.5.3’ #You can define the flutter version.
+                   - run: flutter pub get #installing the plugins for the flutter project
+                   - run: flutter test #running flutter test
+                   - run: flutter build apk #building flutter apk
+                   - run: flutter build appbundle #building flutter bundle

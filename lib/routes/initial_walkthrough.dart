@@ -281,7 +281,6 @@ class InitialWalkthroughPageState extends State<InitialWalkthroughPage>
   void _proceedToRegister() {
    _requestAndroidPermission(context);
     widget._registrationBloc.registerSink.add(null);
-    Navigator.of(context).pop();
   }
 
   void _showToast(BuildContext context) {
