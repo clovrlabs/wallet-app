@@ -1,12 +1,9 @@
 import 'dart:async';
 
 import 'package:clovrlabs_wallet/services/breez_server/server.dart';
-import 'package:clovrlabs_wallet/services/breezlib/breez_bridge.dart';
-import 'package:clovrlabs_wallet/services/breezlib/data/rpc.pb.dart';
 import 'package:clovrlabs_wallet/services/device.dart';
 import 'package:clovrlabs_wallet/services/injector.dart';
 import 'package:clovrlabs_wallet/services/notifications.dart';
-import 'package:fixnum/fixnum.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -49,21 +46,6 @@ class NotificationsMock extends Mock implements Notifications {
 }
 
 
-class BreezLibMock extends Mock implements BreezBridge {
-  Future<AddInvoiceReply> addInvoice(
-    Int64 amount, {
-    String payeeName,
-    String payeeImageURL,
-    String payerName,
-    String payerImageURL,
-    String description,
-    Int64 expiry,
-    LSPInformation lspInfo,
-  }) {
-    return Future.value(AddInvoiceReply());
-  }
-}
-
 class DeviceMock extends Mock implements Device {
   final StreamController<NotificationType> _eventsController =
       StreamController.broadcast();
@@ -83,9 +65,6 @@ class FirebaseNotificationsMock extends Mock implements FirebaseNotifications {
 class InjectorMock extends Mock implements ServiceInjector {
   MockClientHandler mockHandler;
 
-  BreezBridge get breezBridge {
-    return BreezLibMock();
-  }
 
   @override
   Future<SharedPreferences> get sharedPreferences async {
