@@ -1,31 +1,40 @@
-name: Flutter for Android
+# cd.yml
+name: CD
 
 on:
   push:
-    branches: [ feature/app_without_rc ]
-  pull_request:
-    branches: [ feature/app_without_rc ]
+    branches:
+      - 'v*'
 
 jobs:
-  release-ios:
-    name: Build and release iOS app
-    runs-on: latest-stable
+  deploy_ios:
+    name: Deploy beta build to TestFlight
+    runs-on: macOS-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2.8.0
+      - name: Checkout code from ref
+        uses: actions/checkout@v2
         with:
-          flutter-version: '3.3.8'
-      - uses: ruby/setup-ruby@v1
+          ref: ${{ github.ref }}
+      - name: Run Flutter tasks
+        uses: subosito/flutter-action@v1
         with:
-          ruby-version: '3.1.2'
-      - name: Install Fastlane
-        run: cd ios && bundle install && cd ..
-      - name: Install packages
-        run: flutter pub get
-      - name: Install pods
-        run: cd ios && pod install && cd ..
-      - name: Prebuild
-        run: flutter build ios --release --no-codesign
-      - name: Execute Fastlane command
-        run: cd ios && fastlane release type:github
-        timeout-minutes: 40
+          flutter-version: '1.17.5'
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+      - name: Deploy iOS Beta to TestFlight via Fastlane
+        uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: closed_beta
+          subdirectory: ios
+        env:
+          APP_STORE_CONNECT_TEAM_ID: '${{ secrets.APP_STORE_CONNECT_TEAM_ID }}'
+          DEVELOPER_APP_ID: '${{ secrets.DEVELOPER_APP_ID }}'
+          DEVELOPER_APP_IDENTIFIER: '${{ secrets.DEVELOPER_APP_IDENTIFIER }}'
+          DEVELOPER_PORTAL_TEAM_ID: '${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}'
+          FASTLANE_APPLE_ID: '${{ secrets.FASTLANE_APPLE_ID }}'
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: '${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}'
+          MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
+          GIT_AUTHORIZATION: '${{ secrets.GIT_AUTHORIZATION }}'
+          PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
+          TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'
+          TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
