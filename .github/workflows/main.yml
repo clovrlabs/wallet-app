@@ -1,4 +1,4 @@
-# cd.yml
+# main.yml
 name: CD
 
 on:
