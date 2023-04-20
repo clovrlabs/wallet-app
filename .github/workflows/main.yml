@@ -1,30 +1,109 @@
-name: Flutter for Android
+# main.yml
+name: CD
 
 on:
   push:
-    branches: [ feature/app_without_rc ]
-  pull_request:
-    branches: [ feature/app_without_rc ]
+    branches: [ master ]
 
 jobs:
-  release-ios:
-    name: Build and release iOS app
-    runs-on: latest-stable
+  deploy_android:
+    name: Upload Android build to the Firebase
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2.8.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v1
         with:
-          flutter-version: '3.3.8'
-      - uses: ruby/setup-ruby@v1
+          java-version: 12.x
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
         with:
-          ruby-version: '3.1.2'
-      - name: Install Fastlane
-        run: cd ios && bundle install && cd ..
-      - name: Install packages
+          flutter-version: '3.7.3'
+      - name: Install Flutter dependencies
         run: flutter pub get
-      - name: Install pods
-        run: cd ios && pod install && cd ..
-      - name: Prebuild
-        run: flutter build ios --release --no-codesign
-      - name: Execute Fastlane command
-        run: cd ios && fastlane release type:github
+      - name: Google Service
+        env:
+          GCP_SERVICE_ACCOUNT_ANDROID: ${{ secrets.GCP_SERVICE_ACCOUNT_ANDROID }}
+        run: |
+          echo $GCP_SERVICE_ACCOUNT_ANDROID | base64 --decode > ./android/app/google-services.json
+        shell: bash
+      - name: Prepare key
+        env:
+          ANDROID_KEY_JKS: ${{ secrets.ANDROID_KEY_JKS }}
+        run: |
+          echo $ANDROID_KEY_JKS | base64 --decode > ./android/key.jks
+        shell: bash
+      - name: Prepare properties
+        env:
+          KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
+        run: |
+          echo $KEY_PROPERTIES | base64 --decode > ./android/key.properties
+        shell: bash
+      - name: Build Android Release
+        run:  flutter build apk --target-platform=android-arm64 --flavor=client --release
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID_ANDROID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups_file: tester,
+          file: build/app/outputs/flutter-apk/app-client-release.apk
+        env:
+          FIREBASE_APP_ID_ANDROID: '${{ secrets.FIREBASE_APP_ID_ANDROID }}'
+          CREDENTIAL_FILE_CONTENT: '${{ secrets.CREDENTIAL_FILE_CONTENT }}'
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: ${{secrets.CHANNEL_ID}}
+          slack-message: "New Android build is ready. You can download on the Firebase"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  deploy_ios:
+    name: Upload iOS build to the TestFlight
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout code from ref
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Google Service
+        env:
+          GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        run: |
+          echo $GCP_SERVICE_ACCOUNT | base64 --decode > ./ios/Runner/GoogleService-Info.plist
+        shell: bash
+      - name: Run Flutter tasks
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.3'
+      - run: flutter clean
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+      - name: Deploy iOS Beta to TestFlight via Fastlane
+        uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: closed_beta
+          subdirectory: ios
+        env:
+          ITC_TEAM_ID: '${{ secrets.ITC_TEAM_ID }}'
+          APPLICATON_ID: '${{ secrets.APPLICATON_ID }}'
+          BUNDLE_IDENTIFIER: '${{ secrets.BUNDLE_IDENTIFIER }}'
+          DEVELOPER_PORTAL_TEAM_ID: '${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}'
+          FASTLANE_APPLE_ID: '${{ secrets.FASTLANE_APPLE_EMAIL_ID }}'
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: '${{ secrets.APP_SPECIFIC_PASSWORD }}'
+          MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
+          GIT_AUTHORIZATION: '${{ secrets.GIT_AUTHORIZATION }}'
+          PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
+          TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'
+          TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: ${{secrets.CHANNEL_ID}}
+          slack-message: "New iOS build is ready. You can download on the TestFlight"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
