@@ -504,7 +504,8 @@ class BreezBridge {
     return _invokeMethodImmediate("setNonBlockingUnconfirmedSwaps", {});
   }
 
-  Future<AddInvoiceReply> addInvoice(Int64 amount,
+  Future<AddInvoiceReply> addInvoice(
+      Int64 amount,
       {String payeeName,
       String payeeImageURL,
       String payerName,
