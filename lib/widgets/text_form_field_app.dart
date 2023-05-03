@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TextFormFieldApp extends StatelessWidget {
@@ -14,10 +15,15 @@ class TextFormFieldApp extends StatelessWidget {
   final Color enabledBorder;
   final Color disabledBorder;
   final Color txtColor;
+  final bool enabled;
+  final TextInputType keyboardType;
+  final List<TextInputFormatter> inputFormatters;
+  final ValueChanged<String> onChanged;
+  final FocusNode focusNode;
 
   const TextFormFieldApp({
     Key key,
-    @required this.validator,
+    this.validator,
     @required this.peerController,
     @required this.label,
     @required this.primaryColor,
@@ -29,7 +35,11 @@ class TextFormFieldApp extends StatelessWidget {
     @required this.disabledBorder,
     @required this.cursorColor,
     @required this.txtColor,
-
+    this.enabled,
+    this.keyboardType,
+    this.inputFormatters,
+    this.onChanged,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -43,7 +53,7 @@ class TextFormFieldApp extends StatelessWidget {
         highlightColor: highlightColor,
         inputDecorationTheme: InputDecorationTheme(
           labelStyle: TextStyle(
-            color: errorColor,
+            color: primaryColor,
           ),
           errorStyle: TextStyle(
             color: errorColor,
@@ -54,7 +64,11 @@ class TextFormFieldApp extends StatelessWidget {
         ),
       ),
       child: TextFormField(
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        enabled: enabled,
         cursorColor: cursorColor,
+        focusNode: focusNode,
         decoration: InputDecoration(
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
@@ -74,6 +88,7 @@ class TextFormFieldApp extends StatelessWidget {
         controller: peerController,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: validator,
+        onChanged: onChanged,
       ),
     );
   }

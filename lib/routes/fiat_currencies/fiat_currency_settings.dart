@@ -9,7 +9,6 @@ import 'package:clovrlabs_wallet/theme_data.dart' as theme;
 import 'package:clovrlabs_wallet/utils/colors_ext.dart';
 import 'package:clovrlabs_wallet/widgets/back_button.dart' as backBtn;
 import 'package:clovrlabs_wallet/widgets/flushbar.dart';
-import 'package:clovrlabs_wallet/widgets/loader.dart';
 import 'package:clovrlabs_wallet/widgets/styles/fiat_currency_remote_confs.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/foundation.dart';
