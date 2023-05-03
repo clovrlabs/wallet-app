@@ -50,18 +50,7 @@ class NotificationsMock extends Mock implements Notifications {
 
 
 class BreezLibMock extends Mock implements BreezBridge {
-  Future<AddInvoiceReply> addInvoice(
-    Int64 amount, {
-    String payeeName,
-    String payeeImageURL,
-    String payerName,
-    String payerImageURL,
-    String description,
-    Int64 expiry,
-    LSPInformation lspInfo,
-  }) {
-    return Future.value(AddInvoiceReply());
-  }
+
 }
 
 class DeviceMock extends Mock implements Device {
