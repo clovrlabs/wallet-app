@@ -15,19 +15,23 @@ class PaymentItemAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (_shouldShowLeadingIcon) {
-      if (paymentItem is StreamedPaymentInfo) {
-        return CircleAvatar(
+    if (paymentItem.preimage == null || paymentItem.preimage.isEmpty) {
+      final metadataImage = _metadataImage();
+      if (metadataImage != null) return metadataImage;
+      Widget child =
+          Icon(Icons.timer, color: Color(0xb3303234));
+      return Container(
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all( color: Colors.red)
+        ),
+        child:  CircleAvatar(
           radius: radius,
           backgroundColor: Colors.white,
-          child: ImageIcon(
-            AssetImage("src/icon/podcast.png"),
-            color: theme.ClovrLabsWalletColors.dark_grey[500],
-            size: 0.6 * radius * 2,
-          ),
-        );
-      }
-
+          child: child,
+        ),
+      );
+    } else if (_shouldShowLeadingIcon) {
       final metadataImage = _metadataImage();
       if (metadataImage != null) return metadataImage;
 

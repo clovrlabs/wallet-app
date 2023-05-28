@@ -563,17 +563,6 @@ class BackupBloc {
     }
   }
 
-  Future<void> _restorePodcastsDB() async {
-    final backupAnytimeDbPath =
-        _backupAppDataDirPath + Platform.pathSeparator + 'anytime.db';
-    final anytimeDbPath = _appDirPath + Platform.pathSeparator + 'anytime.db';
-    if (await File(backupAnytimeDbPath).exists()) {
-      await File(backupAnytimeDbPath).copy(anytimeDbPath).catchError((err) {
-        throw Exception("Failed to restore podcast library.");
-      });
-    }
-  }
-
   close() {
     _backupNowController.close();
     _backupAppDataController.close();

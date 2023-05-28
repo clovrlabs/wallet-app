@@ -117,11 +117,14 @@ class PaymentItem extends StatelessWidget {
   }
 
   String _title(BuildContext context) {
+    final texts = AppLocalizations.of(context);
     final info = _paymentInfo.lnurlPayInfo;
+    final status = (_paymentInfo.preimage== null || _paymentInfo.preimage.isEmpty)?  texts.payment_progress_title :
+      "";
     if (info != null && info.lightningAddress.isNotEmpty) {
-      return info.lightningAddress;
+      return status + info.lightningAddress;
     } else {
-      return _paymentInfo.title.replaceAll("\n", " ");
+      return status + _paymentInfo.title.replaceAll("\n", " ");
     }
   }
 
