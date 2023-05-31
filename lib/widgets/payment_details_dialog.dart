@@ -126,7 +126,7 @@ Future<Null> showPaymentDetailsDialog(
                           : 8,
                     ),
                     child: AutoSizeText(
-                      paymentInfo.dialogTitle.replaceAll("\n", " "),
+                        (paymentInfo.preimage == null || paymentInfo.preimage.isEmpty) ? texts.payment_progress_title :paymentInfo.dialogTitle.replaceAll("\n", " "),
                       style: themeData.primaryTextTheme.headline5,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,

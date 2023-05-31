@@ -318,6 +318,7 @@
   "payment_details_dialog_expiration": "Expiration",
   "payment_details_dialog_date_and_time": "Date & Time",
   "payment_details_dialog_amount_title": "Amount",
+  "payment_progress_title": "Progress payment",
   "payment_details_dialog_amount_negative": "-{amount}",
   "@payment_details_dialog_amount_negative": {
     "placeholders": {
